@@ -1,0 +1,9 @@
+package semantic-reflection-tests
+
+depends = contrib, test
+
+main = SemanticReflectionTests
+
+executable = semantic-reflection-tests
+
+sourcedir = "."

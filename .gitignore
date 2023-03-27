@@ -1,0 +1,6 @@
+/build
+
+/tests/build
+/tests/**/depends
+/tests/**/output
+/tests/failures

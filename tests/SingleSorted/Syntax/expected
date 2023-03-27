@@ -1,0 +1,19 @@
+"*" (arity 2)
+
+[< "e" (arity 0), "*" (arity 2)]
+"*" (arity 2)
+
+"*"
+"*"
+2
+2
+
+[< "e" (arity 0), "*" (arity 2)]
+[< "e" (arity 0), "*" (arity 2)]
+
+Just "e" (arity 0)
+Nothing
+
+[< "e" (arity 0), "*" (arity 2), "inv" (arity 1)]
+"*" (arity 2)
+

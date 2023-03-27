@@ -1,0 +1,9 @@
+package semantic-reflection
+
+modules =
+    Syntax.SingleSorted,
+    Syntax.SingleSorted.Syntax,
+    Syntax.SingleSorted.Syntax.Base,
+    Syntax.SingleSorted.Syntax.Reflection
+
+sourcedir = "SemanticReflection"

@@ -1,0 +1,22 @@
+. ../../testutils.sh
+
+basicTest Syntax.idr << EOF
+    :exec printLn multOp
+
+    :exec printLn MonoidSyn
+    :exec printLn monoidMult
+
+    :exec printLn $ name monoidMult
+    :exec printLn monoidMult.name
+    :exec printLn $ arity monoidMult
+    :exec printLn monoidMult.arity
+
+    :exec printLn $ ops MonoidSyn
+    :exec printLn $ (.ops) MonoidSyn
+
+    :exec printLn $ the (Maybe (Op MonoidSyn)) $ findOp "e"
+    :exec printLn $ the (Maybe (Op MonoidSyn)) $ findOp "inv"
+
+    :exec printLn GroupSyn
+    :exec printLn groupMult
+EOF
