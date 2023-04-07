@@ -2,6 +2,11 @@ package semantic-reflection
 
 modules =
     Syntax.SingleSorted,
+    Syntax.SingleSorted.Interpretation,
+    Syntax.SingleSorted.Interpretation.Base,
+    Syntax.SingleSorted.Interpretation.Env,
+    Syntax.SingleSorted.Interpretation.Fun,
+    Syntax.SingleSorted.Interpretation.Reflection,
     Syntax.SingleSorted.Syntax,
     Syntax.SingleSorted.Syntax.Base,
     Syntax.SingleSorted.Syntax.Reflection

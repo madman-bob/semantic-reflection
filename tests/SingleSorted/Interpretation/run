@@ -1,0 +1,23 @@
+. ../../testutils.sh
+
+basicTest Interpretation.idr << EOF
+    SomeCtx
+    anonCtx 4
+
+    map (* 2) intEnv
+
+    get intEnv (There (There Here))
+    get intEnv Here
+
+    intFun intEnv
+    curry intFun 2 4 6
+
+    stringFun "Lorem ipsum, " "dolor " "sit amet"
+    uncurry stringFun stringEnv
+
+    the Integer $ impl {syn = MonoidSyn} \`(e)
+    the Integer $ impl {syn = MonoidSyn} \`((*)) 1 4
+
+    the String $ impl {syn = MonoidSyn} \`(e)
+    the String $ impl {syn = MonoidSyn} \`((*)) "x" "y"
+EOF
