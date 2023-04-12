@@ -1,0 +1,23 @@
+. ../../testutils.sh
+
+basicTest Term.idr << EOF
+    :printdef eg
+    :printdef eg'
+    :printdef eg2
+
+    the String $ unsafeEvalEnv [<"a", "b"] eg
+    the String $ unsafeEvalEnv [<"a", "b", "c"] eg2
+
+    show eg
+    show eg2
+
+    the Integer $ unsafeEvalEnv [<1, 2] eg
+    the Integer $ unsafeEvalEnv [<1, 2, 3] eg2
+
+    the String $ unsafeEval eg "a" "b"
+    the String $ unsafeEval eg2 "a" "b" "c"
+    the Integer $ unsafeEval eg 1 2
+    the Integer $ unsafeEval eg2 1 2 3
+
+    show $ unsafeEval {a = Term GroupSyn [<"a", "b"]} eg2 \`(a) \`(b) \`(a * b)
+EOF

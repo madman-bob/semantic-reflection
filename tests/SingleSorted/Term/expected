@@ -1,0 +1,23 @@
+Main.eg : Term GroupSyn [<"x", "y"]
+eg = Operation (let MkOp idx = MkOp Here in MkOp (There idx)) [<Operation (let MkOp idx = MkOp Here in MkOp (There idx)) [<Var (There Here), Operation (let MkOp idx = let MkOp idx = MkOp Here in MkOp (There idx) in MkOp (There idx)) [<]], Operation (MkOp Here) [<Var Here]]
+Main.eg' : Term GroupSyn [<"x", "y"]
+eg' = Operation (let MkOp idx = MkOp Here in MkOp (There idx)) [<Operation (MkOp (There Here)) [<Var (There Here), Operation (MkOp (There (There Here))) [<]], Operation (MkOp Here) [<Var Here]]
+Main.eg2 : Term GroupSyn [<"x", "y", "z"]
+eg2 = Operation (let MkOp idx = MkOp Here in MkOp (There idx)) [<Operation (MkOp (There Here)) [<Var (There Here), Operation (MkOp (There Here)) [<Var (There (There Here)), Var Here]], Var (There (There Here))]
+
+"((a * e) * (inv b))"
+"((b * (a * c)) * a)"
+
+"((x * e) * (inv y))"
+"((y * (x * z)) * x)"
+
+-2
+3
+
+"((a * e) * (inv b))"
+"((b * (a * c)) * a)"
+-2
+3
+
+"((b * (a * (a * b))) * a)"
+

@@ -9,6 +9,9 @@ modules =
     Syntax.SingleSorted.Interpretation.Reflection,
     Syntax.SingleSorted.Syntax,
     Syntax.SingleSorted.Syntax.Base,
-    Syntax.SingleSorted.Syntax.Reflection
+    Syntax.SingleSorted.Syntax.Reflection,
+    Syntax.SingleSorted.Term,
+    Syntax.SingleSorted.Term.Base,
+    Syntax.SingleSorted.Term.Reflection
 
 sourcedir = "SemanticReflection"
