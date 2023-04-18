@@ -13,7 +13,7 @@ basicTest Interpretation.idr << EOF
     curry intFun 2 4 6
 
     stringFun "Lorem ipsum, " "dolor " "sit amet"
-    uncurry stringFun stringEnv
+    uncurry {b = const String} stringFun stringEnv
 
     the Integer $ impl {syn = MonoidSyn} \`(e)
     the Integer $ impl {syn = MonoidSyn} \`((*)) 1 4

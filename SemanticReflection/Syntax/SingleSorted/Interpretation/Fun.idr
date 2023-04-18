@@ -12,23 +12,24 @@ import public Syntax.SingleSorted.Interpretation.Env
 ||| This is a useful intermediate representation for an operation that has been
 ||| partially interpreted as an Idris function.
 public export
-Fun' : (ctx : Context) -> (a : Type) -> (b : Type) -> Type
-Fun' [<] a b = b
-Fun' (ctx :< _) a b = Fun' ctx a (a -> b)
+Fun' : (ctx : Context) -> (a : Type) -> (b : Env ctx a -> Type) -> Type
+Fun' [<] a b = b [<]
+Fun' (ctx :< _) a b = Fun' ctx a $ \env => (x : a) -> b (env :< x)
 
 ||| An interpretation of an operation in a context, of type a
 public export
 Fun : (ctx : Context) -> (a : Type) -> Type
-Fun ctx a = Fun' ctx a a
+Fun ctx a = Fun' ctx a (const a)
 
 public export
 curry : {ctx : Context} ->
-        (Env ctx a -> b) ->
+        {0 b : Env ctx a -> Type} ->
+        ((env : Env ctx a) -> b env) ->
         Fun' ctx a b
 curry {ctx = [<]} f = f [<]
-curry {ctx = ctx :< _} f = curry {ctx} (f .: (:<))
+curry {ctx = ctx :< _} f = curry {ctx} $ \env, x => f (env :< x)
 
 public export
-uncurry : Fun' ctx a b -> Env ctx a -> b
+uncurry : Fun' ctx a b -> (env : Env ctx a) -> b env
 uncurry f [<] = f
-uncurry {ctx = ctx :< _} f (xs :< x) = uncurry f xs x
+uncurry f (env :< x) = (the ((x : a) -> b (env :< x)) $ uncurry f env) x
