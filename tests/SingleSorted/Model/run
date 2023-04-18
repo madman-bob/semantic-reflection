@@ -1,0 +1,9 @@
+. ../../testutils.sh
+
+basicTest Model.idr << EOF
+    the (List Nat) $ evalEnv [<[1, 2], [3, 4]] eg
+    the (List Nat) $ eval eg [1, 2] [3, 4]
+
+    the Nat $ evalEnv [<1, 2] eg
+    the Nat $ eval eg 1 2
+EOF
