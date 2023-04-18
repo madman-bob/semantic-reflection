@@ -12,6 +12,10 @@ modules =
     Syntax.SingleSorted.Syntax.Reflection,
     Syntax.SingleSorted.Term,
     Syntax.SingleSorted.Term.Base,
-    Syntax.SingleSorted.Term.Reflection
+    Syntax.SingleSorted.Term.Reflection,
+    Syntax.SingleSorted.Theory,
+    Syntax.SingleSorted.Theory.Base,
+    Syntax.SingleSorted.Theory.Proof,
+    Syntax.SingleSorted.Theory.Reflection
 
 sourcedir = "SemanticReflection"
