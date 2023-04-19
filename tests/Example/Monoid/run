@@ -1,0 +1,8 @@
+. ../../testutils.sh
+
+basicTest Example.idr << EOF
+    evalEnv @{Additive} natEnv eg
+    evalEnv @{Multiplicative} natEnv eg
+
+    evalEnv listEnv eg
+EOF

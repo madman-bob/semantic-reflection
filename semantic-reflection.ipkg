@@ -1,6 +1,9 @@
 package semantic-reflection
 
 modules =
+    Data.List.Monoid,
+    Data.Nat.Monoid,
+    Language.Monoid,
     Syntax.SingleSorted,
     Syntax.SingleSorted.Interpretation,
     Syntax.SingleSorted.Interpretation.Base,
