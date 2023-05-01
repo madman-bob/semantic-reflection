@@ -1,5 +1,7 @@
 package semantic-reflection
 
+version = 1.0
+
 modules =
     Data.List.Monoid,
     Data.Nat.Monoid,
