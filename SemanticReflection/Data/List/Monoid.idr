@@ -17,6 +17,6 @@ Model MonoidThy (List a) where
 
     satThy = [<
         Prf appendAssociative,
-        Prf \xs => Refl,
+        Prf $ \xs => Refl,
         Prf appendNilRightNeutral
     ]
