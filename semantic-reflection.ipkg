@@ -3,6 +3,7 @@ package semantic-reflection
 version = 1.0
 
 modules =
+    Data.Bool.Monoid,
     Data.List.Monoid,
     Data.Nat.Monoid,
     Language.Monoid,

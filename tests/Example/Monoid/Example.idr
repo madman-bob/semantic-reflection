@@ -1,3 +1,4 @@
+import Data.Bool.Monoid
 import Data.List.Monoid
 import Data.Nat.Monoid
 
@@ -13,3 +14,6 @@ natEnv = [<3, 2]
 
 listEnv : Env [<"x", "y"] (List Nat)
 listEnv = [<[1, 2], [3, 4]]
+
+boolEnv : Env [<"x", "y"] Bool
+boolEnv = [<False, True]

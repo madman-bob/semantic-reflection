@@ -5,4 +5,8 @@ basicTest Example.idr << EOF
     evalEnv @{Multiplicative} natEnv eg
 
     evalEnv listEnv eg
+
+    evalEnv @{And} boolEnv eg
+    evalEnv @{Or} boolEnv eg
+    evalEnv @{Xor} boolEnv eg
 EOF
