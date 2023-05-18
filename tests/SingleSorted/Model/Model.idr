@@ -43,3 +43,9 @@ Model MonoidThy Nat where
 
 eg : Term MonoidSyn [<"x", "y"]
 eg = `(x * y)
+
+listAssoc : (x : List a) ->
+            (y : List a) ->
+            (z : List a) ->
+            x ++ (y ++ z) = (x ++ y) ++ z
+listAssoc = getPrf {a = List a} $ There (There Here)

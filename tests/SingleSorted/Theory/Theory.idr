@@ -60,3 +60,6 @@ ConcatSatMonoidThy = [<
     ConcatLeftId,
     Prf appendNilRightNeutral
   ]
+
+ConcatRightId : SatAxiom ConcatInterp `(x * e = x)
+ConcatRightId = getSatAxiom @{ConcatSatMonoidThy} Here

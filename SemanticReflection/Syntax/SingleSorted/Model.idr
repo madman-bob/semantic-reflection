@@ -45,3 +45,9 @@ eval : Model {syn} thy a =>
 eval =
     -- safety enforced by existence of satThy
     unsafeEval @{int}
+
+public export
+getPrf : Model thy a =>
+         HasAxiom thy ax ->
+         Fun' ax.vars a $ \env => evalEnv env ax.lhs = evalEnv env ax.rhs
+getPrf hasAx = prf @{getSatAxiom @{satThy} hasAx}
