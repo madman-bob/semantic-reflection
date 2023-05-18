@@ -35,6 +35,57 @@ get : Env ctx a -> Elem nm ctx -> a
 get (env :< x) Here = x
 get (env :< _) (There idx) = get env idx
 
+namespace ConstEnv
+    public export
+    constEnv : {ctx : Context} ->
+               a ->
+               Env ctx a
+    constEnv {ctx = [<]} x = [<]
+    constEnv {ctx = _ :< _} x = constEnv x :< x
+
+    public export
+    constEnvConst : {idx : Elem v ctx} ->
+                    get (constEnv x) idx = x
+    constEnvConst {idx = Here} = Refl
+    constEnvConst {idx = There idx} = constEnvConst {idx}
+
+namespace IndicatorEnv
+    public export
+    indEnv : {ctx : Context} ->
+             a ->
+             a ->
+             Elem v ctx ->
+             Env ctx a
+    indEnv x y Here = constEnv x :< y
+    indEnv x y (There idx) = indEnv x y idx :< x
+
+    public export
+    indEnvSame : {idx : Elem v ctx} -> get (indEnv x y idx) idx = y
+    indEnvSame {idx = Here} = Refl
+    indEnvSame {idx = There idx} = indEnvSame {idx}
+
+    public export
+    indEnvDiff : {i : Elem v ctx} ->
+                 {j : Elem u ctx} ->
+                 Not (i = j) ->
+                 get (indEnv x y i) j = x
+    indEnvDiff {i = Here} {j = Here} nij = absurd $ nij Refl
+    indEnvDiff {i = Here} {j = There j} nij = constEnvConst
+    indEnvDiff {i = There i} {j = Here} nij = Refl
+    indEnvDiff {i = There i} {j = There j} nij = indEnvDiff {i} {j} (nij . (\Refl => Refl))
+
+    public export
+    indEnvMatch : {i : Elem v ctx} ->
+                  {j : Elem u ctx} ->
+                  Not (x = y) ->
+                  get (indEnv x y i) j = y ->
+                  (v = u, i = j)
+    indEnvMatch {i = Here} {j = Here} nxy prf = (Refl, Refl)
+    indEnvMatch {i = Here} {j = There j} nxy prf = absurd $ nxy $ trans (sym constEnvConst) prf
+    indEnvMatch {i = There i} {j = Here} nxy prf = absurd $ nxy prf
+    indEnvMatch {i = There i} {j = There j} nxy prf with (indEnvMatch {i} {j} nxy prf)
+      indEnvMatch {i = There i} {j = There i} nxy prf | (Refl, Refl) = (Refl, Refl)
+
 ||| A reversed environment in a context, for a type
 |||
 ||| Usually viewed as a collection of arguments, before the desired context is

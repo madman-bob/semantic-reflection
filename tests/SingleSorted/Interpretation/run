@@ -9,6 +9,11 @@ basicTest Interpretation.idr << EOF
     get intEnv (There (There Here))
     get intEnv Here
 
+    constEnv {ctx = SomeCtx} 0
+    indEnv {ctx = SomeCtx} 0 1 $ There (There Here)
+    indEnv {ctx = SomeCtx} 0 1 $ There Here
+    indEnv {ctx = SomeCtx} 0 1 $ Here
+
     intFun intEnv
     curry intFun 2 4 6
 
