@@ -49,3 +49,9 @@ listAssoc : (x : List a) ->
             (z : List a) ->
             x ++ (y ++ z) = (x ++ y) ++ z
 listAssoc = getPrf {a = List a} $ There (There Here)
+
+Equiv MonoidThy `(e * e) `(e) where
+    isEquiv @{m} env = getPrf @{m} Here _
+
+nxe : Not (Equiv MonoidThy (`(x) {ctx = [<"x"]}) `(e))
+nxe (IsEquiv isEquiv) = absurd $ isEquiv {a = Nat} [<1]

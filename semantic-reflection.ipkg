@@ -15,6 +15,7 @@ modules =
     Syntax.SingleSorted.Interpretation.Reflection,
     Syntax.SingleSorted.Model,
     Syntax.SingleSorted.Model.Base,
+    Syntax.SingleSorted.Model.Equiv,
     Syntax.SingleSorted.Syntax,
     Syntax.SingleSorted.Syntax.Base,
     Syntax.SingleSorted.Syntax.Reflection,
