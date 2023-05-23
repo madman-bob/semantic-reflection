@@ -9,6 +9,8 @@ basicTest Interpretation.idr << EOF
     get intEnv (There (There Here))
     get intEnv Here
 
+    replace intEnv Here 4
+
     constEnv {ctx = SomeCtx} 0
     indEnv {ctx = SomeCtx} 0 1 $ There (There Here)
     indEnv {ctx = SomeCtx} 0 1 $ There Here

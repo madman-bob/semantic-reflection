@@ -35,6 +35,29 @@ get : Env ctx a -> Elem nm ctx -> a
 get (env :< x) Here = x
 get (env :< _) (There idx) = get env idx
 
+public export
+replace : Env ctx a -> Elem nm ctx -> a -> Env ctx a
+replace (env :< x) Here y = env :< y
+replace (env :< x) (There idx) y = replace env idx y :< x
+
+public export
+replaceSame : {env : Env ctx a} ->
+              {idx : Elem v ctx} ->
+              get (replace env idx x) idx = x
+replaceSame {env = env :< _} {idx = Here} = Refl
+replaceSame {env = env :< _} {idx = There idx} = replaceSame {idx}
+
+public export
+replaceDiff : {env : Env ctx a} ->
+              {i : Elem v ctx} ->
+              {j : Elem u ctx} ->
+              Not (i = j) ->
+              get (replace env i x) j = get env j
+replaceDiff {env = env :< _} {i = Here} {j = Here} nij = absurd $ nij Refl
+replaceDiff {env = env :< _} {i = Here} {j = There j} nij = Refl
+replaceDiff {env = env :< _} {i = There i} {j = Here} nij = Refl
+replaceDiff {env = env :< _} {i = There i} {j = There j} nij = replaceDiff {i} {j} (nij . (\Refl => Refl))
+
 namespace ConstEnv
     public export
     constEnv : {ctx : Context} ->
@@ -85,6 +108,25 @@ namespace IndicatorEnv
     indEnvMatch {i = There i} {j = Here} nxy prf = absurd $ nxy prf
     indEnvMatch {i = There i} {j = There j} nxy prf with (indEnvMatch {i} {j} nxy prf)
       indEnvMatch {i = There i} {j = There i} nxy prf | (Refl, Refl) = (Refl, Refl)
+
+    public export
+    indEnvMiss : {i : Elem v ctx} ->
+                 {j : Elem u ctx} ->
+                 Not (x = y) ->
+                 get (indEnv x y i) j = x ->
+                 Not (i = j)
+    indEnvMiss {i = Here} {j = Here} nxy prf Refl = nxy $ sym prf
+    indEnvMiss {i = There i} {j = There i} nxy prf Refl = indEnvMiss {i} {j = i} nxy prf Refl
+
+    public export
+    replaceConstInd : {idx : Elem v ctx} -> replace (constEnv x) idx y = indEnv x y idx
+    replaceConstInd {idx = Here} = Refl
+    replaceConstInd {idx = There idx} = cong (:< x) $ replaceConstInd {idx}
+
+    public export
+    replaceIndConst : {idx : Elem v ctx} -> replace (indEnv x y idx) idx x = constEnv x
+    replaceIndConst {idx = Here} = Refl
+    replaceIndConst {idx = There idx} = cong (:< x) $ replaceIndConst {idx}
 
 ||| A reversed environment in a context, for a type
 |||
