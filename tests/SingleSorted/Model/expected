@@ -4,3 +4,6 @@
 3
 3
 
+Yes (EProd LitE (EProd LitE LitE))
+No (\isE => prim__void (uninhabited (trans Refl (isEZero isE))))
+

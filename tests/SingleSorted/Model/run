@@ -6,4 +6,7 @@ basicTest Model.idr << EOF
 
     the Nat $ evalEnv [<1, 2] eg
     the Nat $ eval eg 1 2
+
+    isE \`(e * (e * e))
+    isE eg
 EOF
