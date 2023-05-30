@@ -24,6 +24,11 @@ interface Model (0 thy : Theory syn) (0 a : Type) | a where
 
 %name Model mdl
 
+%hint
+public export
+interp : Model {syn} thy a -> Interp syn a
+interp mdl = int
+
 ||| Evaluate a term in a model and environment
 public export
 evalEnv : Model {syn} thy a =>
