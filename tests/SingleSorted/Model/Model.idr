@@ -53,11 +53,22 @@ listAssoc : (x : List a) ->
             x ++ (y ++ z) = (x ++ y) ++ z
 listAssoc = getPrf {a = List a} $ There (There Here)
 
-Equiv MonoidThy `(e * e) `(e) where
-    isEquiv @{m} env = getPrf @{m} Here _
+someEquiv : Elem "x" ctx =>
+            Elem "y" ctx =>
+            Equiv MonoidThy {ctx} `((e * x) * (y * e)) `(x * y)
+someEquiv = SomeEquiv
+  where
+    L : Term MonoidSyn ctx
+    L = `((e * x) * (y * e))
 
-nxe : Not (Equiv MonoidThy (`(x) {ctx = [<"x"]}) `(e))
-nxe (IsEquiv isEquiv) = absurd $ isEquiv {a = Nat} [<1]
+    R : Term MonoidSyn ctx
+    R = `(x * y)
+
+    [SomeEquiv] Equiv MonoidThy L R where
+        isEquiv {a} env = irrelevantEq $ cong2 (*) (getPrf {a} (There Here) _) (getPrf {a} Here _)
+
+nxe : Elem "x" ctx => Not (Equiv MonoidThy {ctx} `(x) `(e))
+nxe (IsEquiv isEquiv) = absurd $ trans (sym constEnvConst) $ isEquiv {a = Nat} (constEnv 1)
 
 namespace IsE
     export

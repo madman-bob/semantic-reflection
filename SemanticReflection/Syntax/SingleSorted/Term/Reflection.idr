@@ -28,11 +28,11 @@ term = term' []
             Nothing => failAt fc "Operation \{show nm} not in signature"
 
         lookupVar : String -> Elab (Term syn ctx)
-        lookupVar nm = case isElem nm ctx of
-            Yes idx => case args of
+        lookupVar nm = case !(search $ Elem nm ctx) of
+            Just idx => case args of
                 [] => pure $ Var idx
                 _ :: _ => failAt fc "Variable \{show nm} is not a function"
-            No _ => failAt fc "Variable \{show nm} not in context \{show ctx}"
+            Nothing => failAt fc "Variable \{show nm} not in context \{show ctx}"
     term' args (IApp fc f x) = do
         x <- term' [] x
         term' ((::) x args {nm = ""}) f

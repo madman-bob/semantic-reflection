@@ -16,9 +16,7 @@ MonoidSyn = `(\case e => 0; (*) => 2)
     )
 
 leftId : Axiom MonoidSyn
-leftId = MkAxiom [<"x"]
-    (the (Term MonoidSyn [<"x"]) `(e * x))
-    (the (Term MonoidSyn [<"x"]) `(x))
+leftId = MkAxiom [<"x"] `(e * x) `(x)
 
 leftId' : Axiom MonoidSyn
 leftId' = `(e * x = x)

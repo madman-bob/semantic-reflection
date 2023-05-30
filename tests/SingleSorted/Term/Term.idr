@@ -21,8 +21,13 @@ eg = Operation `((*)) [<
 eg' : Term GroupSyn [<"x", "y"]
 eg' = `(x * e * inv y)
 
-egsEq : Main.eg = Main.eg'
-egsEq = Refl
+eg'' : Elem "x" ctx =>
+       Elem "y" ctx =>
+       Term GroupSyn ctx
+eg'' = `(x * e * inv y)
+
+egsEq : (Main.eg = Main.eg', Main.eg = Main.eg'')
+egsEq = (Refl, Refl)
 
 eg2 : Term GroupSyn [<"x", "y", "z"]
 eg2 = `(y * (x * z) * x)
