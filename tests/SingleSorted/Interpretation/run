@@ -4,7 +4,7 @@ basicTest Interpretation.idr << EOF
     SomeCtx
     anonCtx 4
 
-    map (* 2) intEnv
+    map (Prelude.(*) 2) intEnv
 
     get intEnv (There (There Here))
     get intEnv Here
@@ -27,4 +27,10 @@ basicTest Interpretation.idr << EOF
 
     the String $ impl {syn = MonoidSyn} \`(e)
     the String $ impl {syn = MonoidSyn} \`((*)) "x" "y"
+
+    the Integer e
+    the Integer $ Main.(*) 2 6
+
+    the String e
+    the String $ "a" * "b"
 EOF

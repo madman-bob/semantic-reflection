@@ -25,7 +25,7 @@ public export
 [Multiplicative] Model MonoidThy Nat where
     int = MkInterp `(\case
         e => 1
-        (*) => (*)
+        (*) => Prelude.(*)
     )
 
     satThy = [<

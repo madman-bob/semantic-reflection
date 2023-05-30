@@ -10,6 +10,9 @@ import Syntax.SingleSorted.Model
 MonoidSyn : Syntax
 MonoidSyn = `(\case e => 0; (*) => 2)
 
+%runElab openSyn `{MonoidSyn}
+%hide Prelude.(*)
+
 MonoidThy : Theory MonoidSyn
 MonoidThy = `([<
     x * (y * z) = (x * y) * z,
@@ -60,7 +63,7 @@ namespace IsE
     export
     data IsE : Term MonoidSyn ctx -> Type where
         LitE : IsE `(e)
-        EProd : IsE l -> IsE r -> IsE (Operation `((*)) [<l, r])
+        EProd : IsE l -> IsE r -> IsE {ctx} (l * r)
 
     isEZero : {t : Term MonoidSyn ctx} -> IsE t -> evalEnv {a = Nat} (constEnv 1) t = 0
     isEZero {t = Operation (MkOp (There Here)) [<]} LitE = Refl

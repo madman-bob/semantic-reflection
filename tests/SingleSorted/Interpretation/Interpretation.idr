@@ -26,6 +26,8 @@ stringFun x y z = x ++ y ++ z
 MonoidSyn : Syntax
 MonoidSyn = `(\case e => 0; (*) => 2)
 
+%runElab openSyn `{MonoidSyn}
+
 Interp MonoidSyn Integer where
     impl (MkOp Here) = (-)
     impl (MkOp (There Here)) = 0

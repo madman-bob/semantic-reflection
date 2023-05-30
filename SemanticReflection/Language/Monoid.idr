@@ -27,3 +27,5 @@ MonoidThy = `([<
     e * x = x,
     x * e = x
   ])
+
+%runElab openSyn `{MonoidSyn}
