@@ -1,6 +1,10 @@
 []
 [1, 2, 3, 4]
 
+assoc : (0 x : List Nat) -> (0 y : List Nat) -> (0 z : List Nat) -> x ++ (y ++ z) = (x ++ y) ++ z
+leftId : (0 x : List String) -> x = x
+rightId : (0 x : Nat) -> plus x 0 = x
+
 [1, 2, 3, 4]
 [1, 2, 3, 4]
 

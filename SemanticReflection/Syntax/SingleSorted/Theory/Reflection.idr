@@ -14,22 +14,34 @@ import public Syntax.SingleSorted.Theory.Proof
 %default total
 
 namespace Axiom
-    public export
+    getFC : Decl -> FC
+    getFC (IClaim fc _ _ _ _) = fc
+    getFC (IData fc _ _ _) = fc
+    getFC (IDef fc _ _) = fc
+    getFC (IParameters fc _ _) = fc
+    getFC (IRecord fc _ _ _ _) = fc
+    getFC (INamespace fc _ _) = fc
+    getFC (ITransform fc _ _ _) = fc
+    getFC (IRunElabDecl fc _) = fc
+    getFC (ILog _) = EmptyFC
+    getFC (IBuiltin fc _ _) = fc
+
+    export
     axiom : {syn : Syntax} ->
-            TTImp ->
+            List Decl ->
             Elab (Axiom syn)
-    axiom s@(IApp fc1 (IApp fc2 (IVar fc3 `{Builtin.(===)}) lhs) rhs) = do
+    axiom [IClaim fc MW Private [] (MkTy _ _ (UN (Basic nm)) $ IAlternative _ FirstSuccess [s@(IApp _ (IApp _ (IVar _ `{Builtin.(===)}) lhs) rhs), _])] = do
         let ctx = usedVars (map name syn.ops) s
 
         lhs <- term lhs
         rhs <- term rhs
 
-        pure $ MkAxiom ctx lhs rhs
+        pure $ MkAxiom nm ctx lhs rhs
       where
         addVarName : (ignore : Context) ->
                      TTImp ->
                      State Context TTImp
-        addVarName ignore s@(IVar _ (UN $ Basic nm)) = do
+        addVarName ignore s@(IBindVar _ nm) = do
             case isElem nm ignore of
                  Yes _ => pure ()
                  No _ => case isElem nm !get of
@@ -42,24 +54,26 @@ namespace Axiom
                    TTImp ->
                    Context
         usedVars ignore s = execState [<] $ mapMTTImp (addVarName ignore) s
-    axiom (IAlternative _ FirstSuccess ss) = choice $ assert_total $ map (delay . axiom) ss
-    axiom s = failAt (getFC s) "Expected axiom\neg. `(e * x = x)"
+    axiom (decl :: _ :: _) = failAt (getFC decl) "Expected single axiom\nUse `Theory` for collections of axioms"
+    axiom decls = failAt (maybe EmptyFC getFC $ head' decls) "Expected axiom\neg. `[leftId : e * x = x]"
 
     %macro
-    public export
-    fromTTImp : {syn : Syntax} ->
-                TTImp ->
+    export
+    fromDecls : {syn : Syntax} ->
+                List Decl ->
                 Elab (Axiom syn)
-    fromTTImp s = axiom s
+    fromDecls s = axiom s
 
 namespace Theory
     export
-    theory : {syn : Syntax} -> TTImp -> Elab (Theory syn)
-    theory (IApp _ (IApp _ (IVar _ `{(:<)}) xs) x) = [| theory xs :< axiom x |]
-    theory (IVar _ `{Lin}) = [| [<] |]
-    theory s = failAt (getFC s) "Expected theory\neg. `([<e * x = x, x * e = x])"
+    theory : {syn : Syntax} -> List Decl -> Elab (Theory syn)
+    theory decls = theory' (cast decls)
+      where
+        theory' : SnocList Decl -> Elab (Theory syn)
+        theory' (decls :< decl) = [| theory' decls :< axiom [decl] |]
+        theory' [<] = [| [<] |]
 
     %macro
     export
-    fromTTImp : {syn : Syntax} -> TTImp -> Elab (Theory syn)
-    fromTTImp s = theory s
+    fromDecls : {syn : Syntax} -> List Decl -> Elab (Theory syn)
+    fromDecls s = theory s

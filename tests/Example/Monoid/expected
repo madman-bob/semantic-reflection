@@ -10,3 +10,7 @@ True
 []
 [1, 2, 3, 4, 1, 2, 3, 4]
 
+assoc : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) -> plus x (plus y z) = plus (plus x y) z
+leftId : (0 x : Bool) -> False `xor` x = x
+rightId : (0 x : List String) -> x ++ [] = x
+

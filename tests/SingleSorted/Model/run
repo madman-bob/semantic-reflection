@@ -4,6 +4,10 @@ basicTest Model.idr << EOF
     the (List Nat) e
     the (List Nat) $ [1, 2] * [3, 4]
 
+    :t assoc {a = List Nat}
+    :t leftId {a = List String}
+    :t rightId {a = Nat}
+
     the (List Nat) $ evalEnv [<[1, 2], [3, 4]] eg
     the (List Nat) $ eval eg [1, 2] [3, 4]
 

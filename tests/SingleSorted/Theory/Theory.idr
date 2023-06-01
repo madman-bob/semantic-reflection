@@ -16,38 +16,38 @@ MonoidSyn = `(\case e => 0; (*) => 2)
     )
 
 leftId : Axiom MonoidSyn
-leftId = MkAxiom [<"x"] `(e * x) `(x)
+leftId = MkAxiom "leftId" [<"x"] `(e * x) `(x)
 
 leftId' : Axiom MonoidSyn
-leftId' = `(e * x = x)
+leftId' = `[leftId : e * x = x]
 
 leftIdsEq : Main.leftId = Main.leftId'
 leftIdsEq = Refl
 
 failing "Expected axiom"
     badAx : Axiom MonoidSyn
-    badAx = `(e * x)
+    badAx = `[leftId : e * x]
+
+failing "Expected single axiom"
+    badAx : Axiom MonoidSyn
+    badAx = `[leftId : e * x = x; rightId : x * e = x]
 
 MonoidThy : Theory MonoidSyn
 MonoidThy = [<
-    `(x * (y * z) = (x * y) * z),
+    `[assoc : x * (y * z) = (x * y) * z],
     leftId,
-    `(x * e = x)
+    `[rightId : x * e = x]
   ]
 
 MonoidThy' : Theory MonoidSyn
-MonoidThy' = `([<
-    x * (y * z) = (x * y) * z,
-    e * x = x,
-    x * e = x
-  ])
+MonoidThy' = `[
+    assoc : x * (y * z) = (x * y) * z
+    leftId : e * x = x
+    rightId : x * e = x
+  ]
 
 MonoidThysEq : MonoidThy = MonoidThy'
 MonoidThysEq = Refl
-
-failing "Expected theory"
-    badThy : Theory MonoidSyn
-    badThy = `(e * x = x)
 
 [ConcatLeftId] SatAxiom ConcatInterp Main.leftId where
     prf x = Refl
@@ -59,5 +59,5 @@ ConcatSatMonoidThy = [<
     Prf appendNilRightNeutral
   ]
 
-ConcatRightId : SatAxiom ConcatInterp `(x * e = x)
+ConcatRightId : SatAxiom ConcatInterp `[rightId : x * e = x]
 ConcatRightId = getSatAxiom @{ConcatSatMonoidThy} Here

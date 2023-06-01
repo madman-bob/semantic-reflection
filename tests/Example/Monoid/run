@@ -12,4 +12,8 @@ basicTest Example.idr << EOF
 
     evalEnv listEnv e
     evalEnv listEnv $ eg * eg
+
+    :t assoc @{Additive}
+    :t leftId @{Xor}
+    :t rightId {a = List String}
 EOF

@@ -22,10 +22,11 @@ MonoidSyn = `(\case e => 0; (*) => 2)
 ||| - an identity element
 public export
 MonoidThy : Theory MonoidSyn
-MonoidThy = `([<
-    x * (y * z) = (x * y) * z,
-    e * x = x,
-    x * e = x
-  ])
+MonoidThy = `[
+    assoc : x * (y * z) = (x * y) * z
+    leftId : e * x = x
+    rightId : x * e = x
+  ]
 
 %runElab openSyn `{MonoidSyn}
+%runElab openThy `{MonoidThy}

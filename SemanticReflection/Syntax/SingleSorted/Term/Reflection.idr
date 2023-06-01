@@ -33,6 +33,7 @@ term = term' []
                 [] => pure $ Var idx
                 _ :: _ => failAt fc "Variable \{show nm} is not a function"
             Nothing => failAt fc "Variable \{show nm} not in context \{show ctx}"
+    term' args s@(IBindVar fc nm) = term' args $ assert_smaller s $ IVar fc (UN (Basic nm))
     term' args (IApp fc f x) = do
         x <- term' [] x
         term' ((::) x args {nm = ""}) f

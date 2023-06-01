@@ -10,15 +10,16 @@ import Syntax.SingleSorted.Model
 MonoidSyn : Syntax
 MonoidSyn = `(\case e => 0; (*) => 2)
 
-%runElab openSyn `{MonoidSyn}
-%hide Prelude.(*)
-
 MonoidThy : Theory MonoidSyn
-MonoidThy = `([<
-    x * (y * z) = (x * y) * z,
-    e * x = x,
-    x * e = x
-  ])
+MonoidThy = `[
+    assoc : x * (y * z) = (x * y) * z
+    leftId : e * x = x
+    rightId : x * e = x
+  ]
+
+%runElab openSyn `{MonoidSyn}
+%runElab openThy `{MonoidThy}
+%hide Prelude.(*)
 
 Model MonoidThy (List a) where
     int = MkInterp `(\case
@@ -47,25 +48,10 @@ Model MonoidThy Nat where
 eg : Term MonoidSyn [<"x", "y"]
 eg = `(x * y)
 
-listAssoc : (x : List a) ->
-            (y : List a) ->
-            (z : List a) ->
-            x ++ (y ++ z) = (x ++ y) ++ z
-listAssoc = getPrf {a = List a} $ There (There Here)
-
 someEquiv : Elem "x" ctx =>
             Elem "y" ctx =>
             Equiv MonoidThy {ctx} `((e * x) * (y * e)) `(x * y)
-someEquiv = SomeEquiv
-  where
-    L : Term MonoidSyn ctx
-    L = `((e * x) * (y * e))
-
-    R : Term MonoidSyn ctx
-    R = `(x * y)
-
-    [SomeEquiv] Equiv MonoidThy L R where
-        isEquiv {a} env = irrelevantEq $ cong2 (*) (getPrf {a} (There Here) _) (getPrf {a} Here _)
+someEquiv = IsEquiv $ \env => cong2 (*) (leftId _) (rightId _)
 
 nxe : Elem "x" ctx => Not (Equiv MonoidThy {ctx} `(x) `(e))
 nxe (IsEquiv isEquiv) = absurd $ trans (sym constEnvConst) $ isEquiv {a = Nat} (constEnv 1)
