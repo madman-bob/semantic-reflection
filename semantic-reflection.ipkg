@@ -18,6 +18,7 @@ modules =
     Syntax.SingleSorted.Model.Equiv,
     Syntax.SingleSorted.Model.Reflection,
     Syntax.SingleSorted.Model.Property,
+    Syntax.SingleSorted.Property.UnusedVar,
     Syntax.SingleSorted.Syntax,
     Syntax.SingleSorted.Syntax.Base,
     Syntax.SingleSorted.Syntax.Reflection,

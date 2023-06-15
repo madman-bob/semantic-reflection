@@ -1,0 +1,4 @@
+. ../../../testutils.sh
+
+basicTest UnusedVar.idr << EOF
+EOF
