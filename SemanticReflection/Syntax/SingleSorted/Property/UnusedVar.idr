@@ -32,6 +32,11 @@ Property thy (UnusedVar thy i) where
         ~~ evalEnv (replace env i x) t ...(idxUnused.canReplace env x)
         ~~ evalEnv (replace env i x) s ...(isEquiv @{ts} _)
 
+export
+irrelevantUnusedVar : (0 idxUnused : UnusedVar thy i t) ->
+                      UnusedVar thy i t
+irrelevantUnusedVar idxUnused = IsUnused $ \env, x => irrelevantEq $ idxUnused.canReplace env x
+
 ||| If a variable is unused in itself, then all models of that theory are trivial
 |||
 ||| For example, consider the "constant" theory, with:

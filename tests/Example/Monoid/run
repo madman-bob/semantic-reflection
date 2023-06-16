@@ -17,3 +17,13 @@ basicTest Example.idr << EOF
     :t leftId @{Xor}
     :t rightId {a = List String}
 EOF
+
+basicTest UnusedVar.idr << EOF
+    isYes $ isUnusedVar x egSimple
+    isYes $ isUnusedVar y egSimple
+    isYes $ isUnusedVar z egSimple
+
+    isYes $ isUnusedVar x egComplex
+    isYes $ isUnusedVar y egComplex
+    isYes $ isUnusedVar z egComplex
+EOF

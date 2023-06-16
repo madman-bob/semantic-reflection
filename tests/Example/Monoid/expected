@@ -14,3 +14,11 @@ assoc : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) -> plus x (plus y z) = plus (p
 leftId : (0 x : Bool) -> False `xor` x = x
 rightId : (0 x : List String) -> x ++ [] = x
 
+False
+True
+True
+
+False
+True
+False
+

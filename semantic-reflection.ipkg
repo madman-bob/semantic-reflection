@@ -7,6 +7,7 @@ modules =
     Data.List.Monoid,
     Data.Nat.Monoid,
     Language.Monoid,
+    Language.Monoid.UnusedVar,
     Syntax.SingleSorted,
     Syntax.SingleSorted.Interpretation,
     Syntax.SingleSorted.Interpretation.Base,
