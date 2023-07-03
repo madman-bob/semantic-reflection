@@ -34,3 +34,9 @@ basicTest Interpretation.idr << EOF
     the String e
     the String $ "a" * "b"
 EOF
+
+basicTest All.idr << EOF
+    someEnvGTZero
+
+    extendedVarsCovers
+EOF

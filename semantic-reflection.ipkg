@@ -12,6 +12,7 @@ modules =
     Syntax.SingleSorted.Interpretation,
     Syntax.SingleSorted.Interpretation.Base,
     Syntax.SingleSorted.Interpretation.Env,
+    Syntax.SingleSorted.Interpretation.Env.All,
     Syntax.SingleSorted.Interpretation.Fun,
     Syntax.SingleSorted.Interpretation.Reflection,
     Syntax.SingleSorted.Model,
