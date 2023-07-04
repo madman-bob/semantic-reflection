@@ -40,3 +40,9 @@ basicTest All.idr << EOF
 
     extendedVarsCovers
 EOF
+
+basicTest Any.idr << EOF
+    someIdxGTOne
+
+    someVarPresent
+EOF

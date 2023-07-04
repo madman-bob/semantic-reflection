@@ -35,3 +35,7 @@
 
 [<There Here, Here, There (There Here)]
 
+Evidence "y" (There Here ** LTESucc (LTESucc LTEZero))
+
+There (Here Refl)
+
