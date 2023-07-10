@@ -3,6 +3,7 @@ module Syntax.SingleSorted.Property.UnusedVar
 import Syntax.PreorderReasoning
 
 import public Syntax.SingleSorted
+import public Syntax.SingleSorted.Interpretation.Env.All
 
 %default total
 
@@ -64,3 +65,20 @@ unusedInOther : {0 i : Elem v ctx} ->
                 Not (i = j) ->
                 UnusedVar thy i (Var j)
 unusedInOther nij = IsUnused $ \env, x => sym $ replaceDiff nij
+
+export
+mapCanReplace : {0 vars : Context} ->
+                {args : Env vars (Term syn ctx)} ->
+                All args (UnusedVar thy i) ->
+                Model thy a =>
+                (0 env : Env ctx a) ->
+                (0 x : a) ->
+                map (evalEnv env) args = map (evalEnv (replace env i x)) args
+mapCanReplace {vars = [<]} {args = [<]} [<] env x = Refl
+mapCanReplace {vars = vars :< nm} {args = args :< t} (restUnused :< tUnused) env x = cong2 (:<) (mapCanReplace restUnused env x) (tUnused.canReplace env x)
+
+export
+unusedCong : {0 args : Env (anonCtx op.arity) (Term syn ctx)} ->
+             (0 argsUnused : All args (UnusedVar thy i)) ->
+             UnusedVar thy i (Operation op args)
+unusedCong argsUnused = IsUnused $ \env, x => cong (uncurry (impl op)) $ mapCanReplace argsUnused env x

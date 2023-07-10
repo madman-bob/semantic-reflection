@@ -2,3 +2,6 @@
 
 basicTest UnusedVar.idr << EOF
 EOF
+
+basicTest Syntactic.idr << EOF
+EOF
