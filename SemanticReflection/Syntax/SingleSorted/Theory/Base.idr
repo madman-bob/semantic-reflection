@@ -22,7 +22,7 @@ public export
 record Axiom (syn : Syntax) where
     constructor MkAxiom
     0 name : String
-    0 vars : Context
+    vars : Context
     lhs : Term syn vars
     rhs : Term syn vars
 

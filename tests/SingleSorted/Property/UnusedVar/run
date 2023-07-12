@@ -5,3 +5,11 @@ EOF
 
 basicTest Syntactic.idr << EOF
 EOF
+
+basicTest NoTakeBacks.idr << EOF
+    :module Decidable.Decidable
+
+    isYes $ isUnusedVar {thy = MonoidThy} (There $ There Here) someTerm
+    isYes $ isUnusedVar {thy = MonoidThy} (There Here) someTerm
+    isYes $ isUnusedVar {thy = MonoidThy} Here someTerm
+EOF

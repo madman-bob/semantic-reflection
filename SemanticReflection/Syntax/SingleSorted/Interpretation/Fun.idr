@@ -33,3 +33,17 @@ public export
 uncurry : Fun' ctx a b -> (env : Env ctx a) -> b env
 uncurry f [<] = f
 uncurry f (env :< x) = (the ((x : a) -> b (env :< x)) $ uncurry f env) x
+
+export
+uncurryCurry : {0 b : Env ctx a -> Type} ->
+               {0 f : (env : Env ctx a) -> b env} ->
+               uncurry {b} (curry f) env = f env
+uncurryCurry = irrelevantEq uncurryCurry'
+  where
+    uncurryCurry' : {0 ctx : Context} ->
+                    {0 b : Env ctx a -> Type} ->
+                    {0 f : (env : Env ctx a) -> b env} ->
+                    {env : Env ctx a} ->
+                    uncurry {b} (curry f) env = f env
+    uncurryCurry' {ctx = [<]} {env = [<]} = Refl
+    uncurryCurry' {ctx = ctx :< nm} {b} {f} {env = env :< x} = cong (\g => g x) $ uncurryCurry' {ctx} {b = \env => (x : a) -> b (env :< x)} {f = \env, x => f (env :< x)} {env}

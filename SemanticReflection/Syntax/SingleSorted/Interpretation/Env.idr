@@ -36,6 +36,13 @@ get (env :< x) Here = x
 get (env :< _) (There idx) = get env idx
 
 public export
+getMap : {env : Env ctx a} ->
+         {idx : Elem v ctx} ->
+         get (map f env) idx = f (get env idx)
+getMap {env = env :< x} {idx = Here} = Refl
+getMap {env = env :< x} {idx = There idx} = getMap {env} {idx}
+
+public export
 replace : Env ctx a -> Elem nm ctx -> a -> Env ctx a
 replace (env :< x) Here y = env :< y
 replace (env :< x) (There idx) y = replace env idx y :< x
