@@ -1,0 +1,28 @@
+. ../../testutils.sh
+
+basicTest Syntax.idr << EOF
+    e
+
+    SizedMonoidSyn
+    concat
+
+    name concat
+    concat.name
+    index concat
+    concat.index
+    arity concat
+    concat.arity
+    result concat
+    concat.result
+
+    ops SizedMonoidSyn
+    (.ops) SizedMonoidSyn
+
+    the (Maybe (Op SizedMonoidSyn)) $ findOp "e"
+    the (Maybe (Op SizedMonoidSyn)) $ findOp "inv"
+
+    ModuleSyn
+
+    moduleVectAdd
+    name moduleVectAdd
+EOF

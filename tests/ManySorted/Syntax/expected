@@ -1,0 +1,25 @@
+MkRawOp "e" [<] [] (\value => 0)
+
+MkSyntax [<MkRawOp "e" [<] [] (\value => 0), MkRawOp "*" [<("n", Nat), ("m", Nat)] [(\idx => let [<n, m] = idx in n), (\idx => let [<n, m] = idx in m)] (\idx => let [<n, m] = idx in n + m)]
+MkOp Here
+
+"*"
+"*"
+[<("n", Nat), ("m", Nat)]
+[<("n", Nat), ("m", Nat)]
+[(\idx => let [<n, m] = idx in n), (\idx => let [<n, m] = idx in m)]
+[(\idx => let [<n, m] = idx in n), (\idx => let [<n, m] = idx in m)]
+\idx => let [<n, m] = idx in n + m
+\idx => let [<n, m] = idx in n + m
+
+[<MkOp (There Here), MkOp Here]
+[<MkOp (There Here), MkOp Here]
+
+Just (MkOp (There Here))
+Nothing
+
+MkSyntax [<MkRawOp "I" [<("n", Nat)] [] (\idx => let [<n] = idx in Matrix n n), MkRawOp "<+>" [<("n", Nat), ("m", Nat)] [(\idx => let [<n, m] = idx in Matrix n m), (\idx => let [<n, m] = idx in Matrix n m)] (\idx => let [<n, m] = idx in Matrix n m), MkRawOp "<*>" [<("n", Nat), ("m", Nat), ("p", Nat)] [(\idx => let [<n, m, p] = idx in Matrix n m), (\idx => let [<n, m, p] = idx in Matrix m p)] (\idx => let [<n, m, p] = idx in Matrix n p), MkRawOp "+" [<("n", Nat)] [(\idx => let [<n] = idx in Vector n), (\idx => let [<n] = idx in Vector n)] (\idx => let [<n] = idx in Vector n), MkRawOp "*" [<("n", Nat), ("m", Nat)] [(\idx => let [<n, m] = idx in Matrix n m), (\idx => let [<n, m] = idx in Vector m)] (\idx => let [<n, m] = idx in Vector n)]
+
+MkOp (There Here)
+"+"
+
