@@ -1,0 +1,11 @@
+[<("x", 1), ("y", 2)]
+
+[<LTESucc (LTESucc LTEZero), LTESucc (LTESucc (LTESucc LTEZero))]
+[<LTESucc (LTESucc LTEZero), LTESucc (LTESucc (LTESucc LTEZero))]
+
+get someEnv (There Here) : LTE 2 3
+LTESucc (LTESucc LTEZero)
+
+get someEnv Here : LTE 3 3
+LTESucc (LTESucc (LTESucc LTEZero))
+

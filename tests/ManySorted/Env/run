@@ -1,0 +1,14 @@
+. ../../testutils.sh
+
+basicTest Env.idr << EOF
+    SomeCtx
+
+    someEnv
+    anotherEnv
+
+    :t get someEnv (There Here)
+    get someEnv (There Here)
+
+    :t get someEnv Here
+    get someEnv Here
+EOF
