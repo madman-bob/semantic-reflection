@@ -1,0 +1,9 @@
+. ../../testutils.sh
+
+basicTest Interpretation.idr << EOF
+    impl @{Vec} \`(e) [<] [<]
+    impl @{Vec} \`((*)) [<2, 3] [<["Hello", "world"], ["dolor", "sit", "amet"]]
+
+    the (Singleton 0) e
+    the (Singleton 3) $ Main.(*) (Val 1) (Val 2)
+EOF
