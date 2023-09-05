@@ -4,8 +4,8 @@ import Test.Golden
 
 main : IO ()
 main = runner [
-    !(testsInDir "SingleSorted" (const True) "Single Sorted" [] Nothing),
-    !(testsInDir "SingleSorted/Property" (const True) "Single Sorted Property" [] Nothing),
-    !(testsInDir "ManySorted" (const True) "Many Sorted" [] Nothing),
-    !(testsInDir "Example" (const True) "Examples" [] Nothing)
+    !(testsInDir "SingleSorted" "Single Sorted"),
+    !(testsInDir "SingleSorted/Property" "Single Sorted Property"),
+    !(testsInDir "ManySorted" "Many Sorted"),
+    !(testsInDir "Example" "Examples")
   ]
