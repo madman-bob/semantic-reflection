@@ -28,7 +28,7 @@ namespace Operation
 
 export
 syntax : TTImp -> Elab Syntax
-syntax (ILam fc MW ExplicitArg _ _ $ ICase _ _ _ clauses) = do
+syntax (ILam fc MW ExplicitArg _ _ $ ICase _ [] _ _ clauses) = do
     ops <- traverse rawOp $ clauses
     pure $ MkSyntax $ cast ops
   where

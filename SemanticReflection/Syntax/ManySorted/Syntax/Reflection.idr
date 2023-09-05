@@ -58,7 +58,7 @@ namespace RawOp
 
             idxNm <- genSym "idx"
             check $ ILam fc MW ExplicitArg (Just idxNm) imp
-                (ICase fc (IVar fc idxNm) imp
+                (ICase fc [] (IVar fc idxNm) imp
                     [PatClause fc lhs rhs])
 
         sig : SnocList String ->

@@ -36,7 +36,7 @@ interpImpl : {syn : Syntax s} ->
                  Env (anonCtx op.arity i) u ->
                  u (op.result i)
              )
-interpImpl (ILam fc MW ExplicitArg mn arg $ ICase fc' t ty clauses) = do
+interpImpl (ILam fc MW ExplicitArg mn arg $ ICase fc' opts t ty clauses) = do
     clauses <- for clauses $ \case
         PatClause fc lhs rhs => do
             let (args, opCode) = runState [] $ collectVars lhs
@@ -52,7 +52,7 @@ interpImpl (ILam fc MW ExplicitArg mn arg $ ICase fc' t ty clauses) = do
             pure $ PatClause fc !(quote op) rhs
         clause => failAt fc "Expected operator case block with pattern clauses"
 
-    check $ ILam fc MW ExplicitArg mn arg $ ICase fc' t ty clauses
+    check $ ILam fc MW ExplicitArg mn arg $ ICase fc' opts t ty clauses
   where
     collectVars : TTImp -> State (List String) TTImp
     collectVars (IApp _ f (IBindVar _ nm)) = do
@@ -66,7 +66,7 @@ interpImpl (ILam fc MW ExplicitArg mn arg $ ICase fc' t ty clauses) = do
 
         idxNm <- genSym "idx"
         pure $ ILam fc MW ExplicitArg (Just idxNm) (Implicit fc False)
-            (ICase fc (IVar fc idxNm) (Implicit fc False)
+            (ICase fc [] (IVar fc idxNm) (Implicit fc False)
                 [PatClause fc vars rhs])
 interpImpl t = failAt (getFC t) "Expected operator case block"
 
