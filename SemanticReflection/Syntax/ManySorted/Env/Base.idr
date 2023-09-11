@@ -69,3 +69,15 @@ getMap : {0 u : s -> Type} ->
          get (map f env) var = f (get env var)
 getMap {env = env :< x} {var = Here} = Refl
 getMap {env = env :< x} {var = There var} = getMap {env} {var}
+
+public export
+varEnv : {ctx : Context s} ->
+         Env ctx (Var ctx)
+varEnv {ctx = [<]} = [<]
+varEnv {ctx = ctx :< (nm, a)} = (map There $ varEnv {ctx}) :< Here
+
+export
+getVarEnv : {var : Var ctx a} ->
+            get Base.varEnv var = var
+getVarEnv {var = Here} = Refl
+getVarEnv {var = There var} = trans getMap $ cong There $ getVarEnv {var}

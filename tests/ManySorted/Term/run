@@ -1,0 +1,20 @@
+. ../../testutils.sh
+
+basicTest Term.idr << EOF
+    :printdef eg
+    :printdef eg'
+    :printdef eg2
+
+    varEnv {s = Nat} {syn = SizedInvMonoidSyn} {ctx = \`[x : 1; y : 2]}
+
+    the (Singleton 3) $ unsafeEval [<Val 1, Val 2] eg
+    the (Singleton 8) $ unsafeEval [<Val 1, Val 2, Val 3] eg2
+
+    unsafeEval @{Vec} [<[1], [2, 3]] eg
+    unsafeEval @{Vec} [<[1], [2, 3], [4, 5, 6]] eg2
+
+    show eg
+    show eg2
+
+    show $ unsafeEval termEnv eg2
+EOF

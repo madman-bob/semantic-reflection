@@ -11,4 +11,6 @@ basicTest Env.idr << EOF
 
     :t get someEnv Here
     get someEnv Here
+
+    varEnv {ctx = SomeCtx}
 EOF
