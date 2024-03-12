@@ -1,0 +1,11 @@
+True
+
+False
+False
+
+assoc : (0 x : Bool) -> (0 y : Bool) -> (0 z : Bool) -> x `xor` (y `xor` z) = (x `xor` y) `xor` z
+leftId : (0 x : Bool) -> False `xor` x = x
+rightId : (0 x : Bool) -> x `xor` False = x
+leftInv : (0 x : Bool) -> x `xor` x = False
+rightInv : (0 x : Bool) -> x `xor` x = False
+

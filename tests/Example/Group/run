@@ -1,0 +1,14 @@
+. ../../testutils.sh
+
+basicTest Example.idr << EOF
+    evalEnv @{Xor} boolEnv eg
+
+    evalEnv @{Xor} boolEnv e
+    evalEnv @{Xor} boolEnv $ eg * \`(y)
+
+    :t assoc @{Xor}
+    :t leftId @{Xor}
+    :t rightId @{Xor}
+    :t leftInv @{Xor}
+    :t rightInv @{Xor}
+EOF

@@ -3,9 +3,11 @@ package semantic-reflection
 version = 2.0
 
 modules =
+    Data.Bool.Group,
     Data.Bool.Monoid,
     Data.List.Monoid,
     Data.Nat.Monoid,
+    Language.Group,
     Language.Monoid,
     Language.Monoid.UnusedVar,
     Syntax.ManySorted,
