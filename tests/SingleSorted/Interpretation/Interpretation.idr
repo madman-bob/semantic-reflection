@@ -11,6 +11,9 @@ intEnv = [<1, 2, 3]
 stringEnv : Env SomeCtx String
 stringEnv = [<"Hello ", "world", "!"]
 
+tupleEnv : Env SomeCtx (Bool, Nat, String)
+tupleEnv = [<(False, 0, "Lorem"), (True, 1, "ipsum"), (False, 2, "dolor")]
+
 failing #"Mismatch between: [<] and [<"x", "y", "z"]."#
     badEnv : Env SomeCtx Integer
     badEnv = [<]

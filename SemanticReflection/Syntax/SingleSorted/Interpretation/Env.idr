@@ -1,6 +1,7 @@
 module Syntax.SingleSorted.Interpretation.Env
 
 import public Data.SnocList.Elem
+import Data.Zippable
 
 %default total
 
@@ -29,6 +30,39 @@ public export
 Functor (Env ctx) where
     map f [<] = [<]
     map f (env :< x) = map f env :< f x
+
+public export
+Foldable (Env ctx) where
+    foldr f acc [<] = acc
+    foldr f acc (env :< x) = foldr f (f x acc) env
+
+    foldl f acc [<] = acc
+    foldl f acc (env :< x) = f (foldl f acc env) x
+
+public export
+Traversable (Env ctx) where
+    traverse f [<] = pure [<]
+    traverse f (env :< x) = [| traverse f env :< f x |]
+
+public export
+Zippable (Env ctx) where
+    zipWith f [<] [<] = [<]
+    zipWith f (env1 :< x) (env2 :< y) = zipWith f env1 env2 :< f x y
+
+    zipWith3 f [<] [<] [<] = [<]
+    zipWith3 f (env1 :< x) (env2 :< y) (env3 :< z) = zipWith3 f env1 env2 env3 :< f x y z
+
+    unzipWith f [<] = ([<], [<])
+    unzipWith f (env :< x) = do
+        let (env1, env2) = unzipWith f env
+        let (y, z) = f x
+        (env1 :< y, env2 :< z)
+
+    unzipWith3 f [<] = ([<], [<], [<])
+    unzipWith3 f (env :< x) = do
+        let (env1, env2, env3) = unzipWith3 f env
+        let (y, z, w) = f x
+        (env1 :< y, env2 :< z, env3 :< w)
 
 public export
 get : Env ctx a -> Elem nm ctx -> a

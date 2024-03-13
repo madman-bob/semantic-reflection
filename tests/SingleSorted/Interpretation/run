@@ -6,6 +6,16 @@ basicTest Interpretation.idr << EOF
 
     map (Prelude.(*) 2) intEnv
 
+    foldr (-) 0 intEnv
+    foldl (-) 0 intEnv
+
+    traverse (\\x => [x, x + 1]) intEnv
+
+    zip intEnv stringEnv
+    zip3 intEnv stringEnv $ map (+ 1) intEnv
+    unzip tupleEnv
+    unzip3 tupleEnv
+
     get intEnv (There (There Here))
     get intEnv Here
 
