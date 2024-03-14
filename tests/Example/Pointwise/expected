@@ -1,0 +1,8 @@
+[[1, 2, 3, 4], [10, 11, 12], [13, 14, 15]]
+[False, True]
+
+[[], [], []]
+[False, False]
+
+\x, y => leftId [x, y] : (x : Bool) -> (y : Bool) -> [(False `xor` x), (False `xor` y)] = [x, y]
+

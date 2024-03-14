@@ -1,0 +1,11 @@
+. ../../testutils.sh
+
+basicTest Example.idr << EOF
+    evalEnv {thy = MonoidThy} listVectEnv monoidTerm
+    evalEnv @{Pointwise @{Xor}} boolVectEnv groupTerm
+
+    evalEnv {thy = MonoidThy} listVectEnv e
+    evalEnv @{Pointwise @{Xor}} boolVectEnv $ groupTerm * inv \`(y)
+
+    :t \x, y => Group.leftId @{Pointwise @{Xor}} [x, y]
+EOF
