@@ -8,6 +8,7 @@ import public Syntax.ManySorted.Syntax
 
 %default total
 
+export
 snocListLit : Foldable f =>
               f TTImp ->
               TTImp
