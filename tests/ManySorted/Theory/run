@@ -1,0 +1,4 @@
+. ../../testutils.sh
+
+basicTest Theory.idr << EOF
+EOF
