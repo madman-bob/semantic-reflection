@@ -30,7 +30,7 @@ namespace Axiom
     axiom : {syn : Syntax} ->
             List Decl ->
             Elab (Axiom syn)
-    axiom [IClaim fc MW Private [] (MkTy _ _ (UN (Basic nm)) $ IAlternative _ FirstSuccess [s@(IApp _ (IApp _ (IVar _ `{Builtin.(===)}) lhs) rhs), _])] = do
+    axiom [IClaim fc MW Private [] (MkTy _ _ (UN (Basic nm)) $ IAlternative _ FirstSuccess [s@(IApp _ (IApp _ (IVar _ `{(===)}) lhs) rhs), _])] = do
         let ctx = usedVars (map name syn.ops) s
 
         lhs <- term lhs

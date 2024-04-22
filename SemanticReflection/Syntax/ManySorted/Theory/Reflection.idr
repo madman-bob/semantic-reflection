@@ -63,7 +63,7 @@ axiom syn (IClaim _ MW Private [] (MkTy nmFc _ (UN (Basic nm)) t)) = do
 
     let ((MkSchemaContext _ metas vars), t) = runState (MkSchemaContext (map name syn.ops) [<] [<]) $ collectVars t
 
-    let IAlternative _ FirstSuccess ((IApp _ (IApp _ (IVar _ `{Builtin.(===)}) lhs) rhs) :: _) = t
+    let IAlternative _ FirstSuccess ((IApp _ (IApp _ (IVar _ `{(===)}) lhs) rhs) :: _) = t
         | _ => fail "Expected axiom\neg. `[leftId : e * x = x]"
 
     let ctx = map fst vars
