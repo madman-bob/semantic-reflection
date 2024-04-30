@@ -1,0 +1,10 @@
+
+Val 0
+Val 3
+
+leftId : (0 x : Singleton ?n) -> Val (\arg => arg) <*> x = x
+rightId : (0 x : Singleton ?n) -> (Val (\arg, arg => plus arg arg) <*> x) <*> Val 0 = x
+assoc : (0 x : Singleton ?n) -> (0 y : Singleton ?m) -> (0 z : Singleton ?p) -> (Val (\arg, arg => plus arg arg) <*> x) <*> ((Val (\arg, arg => plus arg arg) <*> y) <*> z) = (Val (\arg, arg => plus arg arg) <*> ((Val (\arg, arg => plus arg arg) <*> x) <*> y)) <*> z
+
+Val 3
+

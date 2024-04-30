@@ -25,3 +25,17 @@ data SatTheory : Interp {s} syn u -> Theory syn -> Type where
     (:<) : SatTheory int thy -> SatAxiom int axs -> SatTheory int (thy :< axs)
 
 %name SatTheory satThy
+
+public export
+data HasAxiom : Theory syn -> Axiom syn -> Type where
+    Here : HasAxiom (thy :< ax) ax
+    There : HasAxiom thy ax -> HasAxiom (thy :< f) ax
+
+%name HasAxiom hasAx
+
+public export
+getSatAxiom : SatTheory int thy =>
+              HasAxiom thy ax ->
+              SatAxiom int ax
+getSatAxiom @{satThy :< sat} Here = sat
+getSatAxiom @{satThy :< _} (There hasAx) = getSatAxiom hasAx

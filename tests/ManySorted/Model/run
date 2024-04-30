@@ -1,0 +1,14 @@
+. ../../testutils.sh
+
+basicTest Model.idr << EOF
+    :let %hide Prelude.(*)
+
+    the (Singleton _) e
+    Val 1 * Val 2
+
+    :t leftId {u = Singleton}
+    :t rightId {u = Singleton}
+    :t assoc {u = Singleton}
+
+    eval [<Val 1, Val 2] eg
+EOF
