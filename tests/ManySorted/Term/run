@@ -16,5 +16,7 @@ basicTest Term.idr << EOF
     show eg
     show eg2
 
+    :t someHole
+
     show $ unsafeEval termEnv eg2
 EOF

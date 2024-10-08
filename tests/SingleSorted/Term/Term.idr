@@ -32,6 +32,9 @@ egsEq = (Refl, Refl)
 eg2 : Term GroupSyn [<"x", "y", "z"]
 eg2 = `(y * (x * z) * x)
 
+eg3 : Term GroupSyn [<"x", "y", "z"]
+eg3 = `(x * ?someHole)
+
 failing #"Variable "z" not in context [< "x", "y"]"#
     badEg : Term GroupSyn [<"x", "y"]
     badEg = `(z)

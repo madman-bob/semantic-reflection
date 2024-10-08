@@ -11,6 +11,8 @@ basicTest Term.idr << EOF
     show eg
     show eg2
 
+    :t someHole
+
     the Integer $ unsafeEvalEnv [<1, 2] eg
     the Integer $ unsafeEvalEnv [<1, 2, 3] eg2
 

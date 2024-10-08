@@ -11,6 +11,8 @@ eg2 = Operation (let MkOp idx = MkOp Here in MkOp (There idx)) [<Operation (MkOp
 "((x * e) * (inv y))"
 "((y * (x * z)) * x)"
 
+Main.someHole : Term (MkSyntax [<MkRawOp "e" 0, MkRawOp "*" 2, MkRawOp "inv" 1]) [<"x", "y", "z"]
+
 -2
 3
 

@@ -16,5 +16,7 @@ Val 8
 "((x * e) * (inv y))"
 "((y * (x * z)) * y)"
 
+Main.someHole : Term (MkSyntax [<MkRawOp "e" [<] [] (\idx => let [<] = idx in 0), MkRawOp "inv" [<("n", Nat)] [(\idx => let [<n] = idx in n)] (\idx => let [<n] = idx in n), MkRawOp "*" [<("n", Nat), ("m", Nat)] [(\idx => let [<n, m] = idx in n), (\idx => let [<n, m] = idx in m)] (\idx => let [<n, m] = idx in n + m)]) [<("x", 1), ("y", 2)] 1
+
 "((b * (a * (a * b))) * b)"
 
