@@ -31,30 +31,20 @@ findOp fc syn nm = do
             idx <- findOp' rawOps
             pure `(There ~(idx))
 
-findVar : FC ->
-          SnocList String ->
-          (nm : String) ->
-          Elab TTImp
-findVar fc [<] nm = failAt fc "Variable \{show nm} is not in context"
-findVar fc (nms :< n) nm = if n == nm
-    then pure `(Here)
-    else do
-        idx <- findVar fc nms nm
-        pure `(There ~(idx))
-
 export
 term : Syntax s ->
-       SnocList String ->
        TTImp ->
        Elab TTImp
-term syn ctx = term' []
+term syn = term' []
   where
     term' : (args : List TTImp) ->
             TTImp ->
             Elab TTImp
     term' args (IVar fc (UN (Basic nm))) = do
         case !(catch $ findOp fc syn nm) of
-            Nothing => asVar
+            Nothing => case args of
+                [] => pure asVar
+                _ :: _ => failAt fc "Operation \{show nm} not in syntax"
             Just opT => asOp opT
       where
         asOp : (opT : TTImp) -> Elab TTImp
@@ -67,15 +57,8 @@ term syn ctx = term' []
 
             pure `(Operation ~(opT) ~(impEnv op.index) ~(snocListLit args))
 
-        asVar : Elab TTImp
-        asVar = do
-            varT <- findVar fc ctx nm
-
-            case args of
-                [] => pure ()
-                _ :: _ => failAt fc "Variable \{show nm} is not a function"
-
-            pure `(Var ~(varT))
+        asVar : TTImp
+        asVar = `(Var $ forgetName {nm = ~(IPrimVal EmptyFC $ Str nm)} %search)
     term' args (IApp fc f x) = do
         arg <- term' [] x
         term' (arg :: args) f
@@ -85,7 +68,6 @@ term syn ctx = term' []
 %macro
 export
 fromTTImp : {syn : Syntax s} ->
-            {ctx : Context s} ->
             TTImp ->
             Elab (Term syn ctx a)
-fromTTImp t = term syn (map fst ctx) t >>= check
+fromTTImp t = term syn t >>= check

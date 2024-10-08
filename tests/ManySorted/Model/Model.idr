@@ -39,10 +39,7 @@ Model SizedMonoidThy (Singleton {a = Nat}) where
 eg : Term SizedMonoidSyn `[x : 1; y : 2] 3
 eg = `(x * y)
 
-eg2 : Term SizedMonoidSyn `[x : 1; y : 2] 3
-eg2 = `((e * x) * (y * e))
-
-someEquiv : Equiv SizedMonoidThy Main.eg2 Main.eg
+someEquiv : Equiv SizedMonoidThy `((e * x) * (y * e)) Main.eg
 someEquiv = IsEquiv $ \[<x, y] => cong2 (*) (leftId x) (rightId y)
 
 nxe : Not (Equiv SizedMonoidThy Main.eg `(e))

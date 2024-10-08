@@ -81,3 +81,21 @@ getVarEnv : {var : Var ctx a} ->
             get Base.varEnv var = var
 getVarEnv {var = Here} = Refl
 getVarEnv {var = There var} = trans getMap $ cong There $ getVarEnv {var}
+
+namespace Named
+    ||| A named variable reference in a context, of given sort
+    |||
+    ||| For example, suppose we are using Nat as our sorts.
+    ||| Then a `Var SomeCtx "x" 2` is a reference to a variable "x" in that context of
+    ||| sort 2.
+    public export
+    data NVar : (ctx : Context s) -> (nm : String) -> (a : s) -> Type where
+        [search ctx nm, uniqueSearch]
+        Here : NVar (ctx :< (nm :! a)) nm a
+        There : NVar ctx nm a -> NVar (ctx :< (n :! b)) nm a
+
+    public export
+    %inline
+    forgetName : NVar ctx nm a -> Var ctx a
+    forgetName Here = Here
+    forgetName (There x) = There (forgetName x)

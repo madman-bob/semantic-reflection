@@ -34,15 +34,15 @@ egsEq = Refl
 eg2 : Term SizedInvMonoidSyn `[x : 1; y : 2; z : 3] 8
 eg2 = `(y * (x * z) * y)
 
-failing #"Variable "z" is not in context"#
+failing #"Can't find an implementation for NVar [<("x", 1), ("y" :! 2)] "z" 3."#
     badEg : Term SizedInvMonoidSyn `[x : 1; y : 2] 3
     badEg = `(z)
 
-failing #"Variable "f" is not a function"#
+failing #"Operation "f" not in syntax"#
     badEg : Term SizedInvMonoidSyn `[f : 1; x : 2] 3
     badEg = `(f x)
 
-failing #"Variable "f" is not in context"#
+failing #"Operation "f" not in syntax"#
     badEg : Term SizedInvMonoidSyn `[x : 1; y : 2] 3
     badEg = `(f x)
 

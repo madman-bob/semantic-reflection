@@ -1,9 +1,9 @@
 Main.eg : Term SizedInvMonoidSyn [<("x", 1), ("y" :! 2)] 3
 eg = Operation (MkOp Here) [<S (plus 0 0), 2] [<Operation (MkOp Here) [<1, 0] [<Var (There Here), Operation (let MkOp idx = let MkOp idx = MkOp Here in MkOp (There idx) in MkOp (There idx)) [<] [<]], Operation (let MkOp idx = MkOp Here in MkOp (There idx)) [<2] [<Var Here]]
 Main.eg' : Term SizedInvMonoidSyn [<("x", 1), ("y" :! 2)] 3
-eg' = Operation (MkOp Here) [<S (plus 0 0), 2] [<Operation (MkOp Here) [<1, 0] [<Var (There Here), Operation (MkOp (There (There Here))) [<] [<]], Operation (MkOp (There Here)) [<(let [<n, m] = [<S (plus 0 0), 2] in m)] [<Var Here]]
+eg' = Operation (MkOp Here) [<S (plus 0 0), 2] [<Operation (MkOp Here) [<1, 0] [<Var (forgetName (There Here)), Operation (MkOp (There (There Here))) [<] [<]], Operation (MkOp (There Here)) [<(let [<n, m] = [<S (plus 0 0), 2] in m)] [<Var (forgetName Here)]]
 Main.eg2 : Term SizedInvMonoidSyn [<("x", 1), ("y", 2), ("z" :! 3)] 8
-eg2 = Operation (MkOp Here) [<S (plus 1 (S (plus 0 3))), 2] [<Operation (MkOp Here) [<2, S (plus 0 3)] [<Var (There Here), Operation (MkOp Here) [<1, 3] [<Var (There (There Here)), Var Here]], Var (There Here)]
+eg2 = Operation (MkOp Here) [<S (plus 1 (S (plus 0 3))), 2] [<Operation (MkOp Here) [<2, S (plus 0 3)] [<Var (forgetName (There Here)), Operation (MkOp Here) [<1, 3] [<Var (forgetName (There (There Here))), Var (forgetName Here)]], Var (forgetName (There Here))]
 
 [<Var (There Here), Var Here]
 

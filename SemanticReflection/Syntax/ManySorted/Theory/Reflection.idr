@@ -66,15 +66,13 @@ axiom syn (IClaim _ MW Private [] (MkTy nmFc _ (UN (Basic nm)) t)) = do
     let IAlternative _ FirstSuccess ((IApp _ (IApp _ (IVar _ `{(===)}) lhs) rhs) :: _) = t
         | _ => fail "Expected axiom\neg. `[leftId : e * x = x]"
 
-    let ctx = map fst vars
-
     metaVarsNm <- genSym "metaVars"
 
     lhsSortNm <- genSym "lhsSort"
     rhsSortNm <- genSym "rhsSort"
 
-    lhs <- term syn ctx lhs
-    rhs <- term syn ctx rhs
+    lhs <- term syn lhs
+    rhs <- term syn rhs
 
     pure $ ILocal fc [
             IClaim fc MW Private [] (MkTy fc fc metaVarsNm `(Context Type)),
