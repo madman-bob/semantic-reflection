@@ -15,22 +15,6 @@ impEnv : Context s -> TTImp
 impEnv [<] = `([<])
 impEnv (ctx :< _) = `(~(impEnv ctx) :< ~(Implicit EmptyFC False))
 
-findOp : FC ->
-         Syntax s ->
-         String ->
-         Elab TTImp
-findOp fc syn nm = do
-    idx <- findOp' syn.rawOps
-    pure `(MkOp ~(idx))
-  where
-    findOp' : (rawOps : SnocList (RawOp s)) -> Elab TTImp
-    findOp' [<] = failAt fc "Operation \{show nm} not in syntax"
-    findOp' (rawOps :< rawOp) = if rawOp.name == nm
-        then pure `(Here)
-        else do
-            idx <- findOp' rawOps
-            pure `(There ~(idx))
-
 export
 term : Syntax s ->
        TTImp ->

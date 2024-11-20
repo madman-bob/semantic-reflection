@@ -58,25 +58,25 @@ failing #"Operation "e" has arity 0, given 1 arg(s)"#
     badEg = `(e x)
 
 Interp SizedInvMonoidSyn Singleton where
-    impl = `(\case
-        e => Val 0
-        inv x => x
-        x * y => [| x + y |]
-    )
+    impl = `[
+        e = Val 0
+        inv x = x
+        x * y = [| x + y |]
+    ]
 
 [Vec] Interp SizedInvMonoidSyn (\n => Vect n a) where
-    impl = `(\case
-        e => []
-        inv x => reverse x
-        x * y => x ++ y
-    )
+    impl = `[
+        e = []
+        inv x = reverse x
+        x * y = x ++ y
+    ]
 
 [ShowInterp] Interp SizedInvMonoidSyn (const String) where
-    impl = `(\case
-        e => "e"
-        inv x => "(inv \{x})"
-        x * y => "(\{x} * \{y})"
-    )
+    impl = `[
+        e = "e"
+        inv x = "(inv \{x})"
+        x * y = "(\{x} * \{y})"
+    ]
 
 {ctx : Context Nat} -> Show (Term SizedInvMonoidSyn ctx a) where
     show x = unsafeEval @{ShowInterp} (names ctx) x

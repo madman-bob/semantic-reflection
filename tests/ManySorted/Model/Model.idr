@@ -25,10 +25,10 @@ SizedMonoidThy = `[
 %hide Prelude.(*)
 
 Model SizedMonoidThy (Singleton {a = Nat}) where
-    int = MkInterp `(\case
-        e => Val 0
-        x * y => [| x + y |]
-    )
+    int = `[
+        e = Val 0
+        x * y = [| x + y |]
+    ]
 
     satThy = [<
         MkSatAxiom $ \[<n], [<Val n] => Refl,

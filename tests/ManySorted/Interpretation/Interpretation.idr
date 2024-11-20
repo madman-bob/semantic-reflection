@@ -23,8 +23,15 @@ Interp SizedInvMonoidSyn Singleton where
     impl (MkOp Here) [<n, m] [<x, y] = [| x + y |]
 
 [Vec] Interp SizedInvMonoidSyn (\n => Vect n a) where
-    impl = `(\case
-        e => []
-        inv x => reverse x
-        xs * ys => xs ++ ys
-      )
+    impl = `[
+        e = []
+        inv x = reverse x
+        xs * ys = xs ++ ys
+      ]
+
+Sing : Interp SizedInvMonoidSyn Singleton
+Sing = `[
+    e = Val 0
+    inv x = x
+    x * y = [| x + y |]
+  ]

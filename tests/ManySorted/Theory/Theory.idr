@@ -13,10 +13,10 @@ SizedMonoidSyn = `[
   ]
 
 [ConcatInterp] Interp SizedMonoidSyn (\n => Vect n a) where
-    impl = `(\case
-        e => []
-        x * y => x ++ y
-    )
+    impl = `[
+        e = []
+        x * y = x ++ y
+    ]
 
 leftId : Axiom SizedMonoidSyn
 leftId = do

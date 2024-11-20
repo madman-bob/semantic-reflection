@@ -17,43 +17,54 @@ snocListLit xs = foldl
     (IVar EmptyFC `{Lin})
     xs
 
-||| Define an interpretation of a syntax, by pattern matching on the syntax
-||| operations
+export
+findOp : FC ->
+         Syntax s ->
+         String ->
+         Elab TTImp
+findOp fc syn nm = do
+    idx <- findOp' syn.rawOps
+    pure `(MkOp ~(idx))
+  where
+    findOp' : (rawOps : SnocList (RawOp s)) -> Elab TTImp
+    findOp' [<] = failAt fc "Operation \{show nm} not in syntax"
+    findOp' (rawOps :< rawOp) = if rawOp.name == nm
+        then pure `(Here)
+        else do
+            idx <- findOp' rawOps
+            pure `(There ~(idx))
+
+||| Define an interpretation of a syntax
 |||
 ||| For example, in the syntax of sized monoids, we can define an interpretation on
 ||| Vect by:
 |||
 ||| Interp SizedMonoidSyn (\n => Vect n a) where
-|||     impl = `(\case
-|||         e => []
-|||         xs * ys => xs ++ ys
-|||       )
+|||     impl = `[
+|||         e = []
+|||         xs * ys = xs ++ ys
+|||       ]
 export
-interpImpl : {syn : Syntax s} ->
-             TTImp ->
-             Elab (
-                 (op : Op syn) ->
-                 (i : Env op.index Prelude.id) ->
-                 Env (anonCtx op.arity i) u ->
-                 u (op.result i)
-             )
-interpImpl (ILam fc MW ExplicitArg mn arg $ ICase fc' opts t ty clauses) = do
-    clauses <- for clauses $ \case
-        PatClause fc lhs rhs => do
-            let (args, opCode) = runState [] $ collectVars lhs
+interpImpl : Syntax s ->
+             List Decl ->
+             Elab TTImp
+interpImpl syn decls = do
+    clauses <- for decls $ \case
+        (IDef fc (UN $ Basic nm) [PatClause _ lhs rhs]) => do
+            opT <- findOp fc syn nm
+            op <- check {expected = Op syn} opT
 
-            -- Cursed `map id` is non-trivial
-            -- It seems to force evaluation of things that would otherwise end up as holes
-            -- Maybe related to Idris issue #2993
-            op <- map id $ operation {syn} opCode
+            let args = execState [] $ collectVars lhs
 
             rhs <- openEnv (cast args) rhs
             rhs <- openEnv (map fst op.index) rhs
 
-            pure $ PatClause fc !(quote op) rhs
-        clause => failAt fc "Expected operator case block with pattern clauses"
+            pure $ PatClause EmptyFC opT rhs
+        def => fail "Expected operation definition"
 
-    check $ ILam fc MW ExplicitArg mn arg $ ICase fc' opts t ty clauses
+    mn <- genSym "lcase"
+    pure $ ILam EmptyFC MW ExplicitArg (Just mn) (Implicit EmptyFC False) $
+        ICase EmptyFC [] (IVar EmptyFC mn) (Implicit EmptyFC False) clauses
   where
     collectVars : TTImp -> State (List String) TTImp
     collectVars (IApp _ f (IBindVar _ nm)) = do
@@ -63,25 +74,32 @@ interpImpl (ILam fc MW ExplicitArg mn arg $ ICase fc' opts t ty clauses) = do
 
     openEnv : SnocList String -> TTImp -> Elab TTImp
     openEnv ctx rhs = do
-        let vars = snocListLit $ map (IBindVar fc) ctx
+        let vars = snocListLit $ map (IBindVar EmptyFC) ctx
 
         idxNm <- genSym "idx"
-        pure $ ILam fc MW ExplicitArg (Just idxNm) (Implicit fc False)
-            (ICase fc [] (IVar fc idxNm) (Implicit fc False)
-                [PatClause fc vars rhs])
-interpImpl t = failAt (getFC t) "Expected operator case block"
+        pure $ ILam EmptyFC MW ExplicitArg (Just idxNm) (Implicit EmptyFC False)
+            (ICase EmptyFC [] (IVar EmptyFC idxNm) (Implicit EmptyFC False)
+                [PatClause EmptyFC vars rhs])
 
 %macro
 export
-fromTTImp : {syn : Syntax s} ->
-            TTImp ->
+fromDecls : {syn : Syntax s} ->
+            List Decl ->
             Elab (
                 (op : Op syn) ->
                 (i : Env op.index Prelude.id) ->
                 Env (anonCtx op.arity i) u ->
                 u (op.result i)
             )
-fromTTImp t = interpImpl t
+fromDecls decls = check !(interpImpl syn decls)
+
+namespace Interpretation
+    %macro
+    export
+    fromDecls : {syn : Syntax s} ->
+                List Decl ->
+                Elab (Interp syn u)
+    fromDecls decls = check `(MkInterp ~(!(interpImpl syn decls)))
 
 ||| Open a syntax in the current namespace
 |||
