@@ -12,13 +12,13 @@ SomeEnv : Env SomeCtx Nat
 SomeEnv = [<1, 2, 3]
 
 someEnvNonZero : All SomeEnv NonZero
-someEnvNonZero = [<SIsNonZero, SIsNonZero, SIsNonZero]
+someEnvNonZero = [<ItIsSucc, ItIsSucc, ItIsSucc]
 
 twoNonZero : NonZero 2
 twoNonZero = getAll someEnvNonZero (There Here)
 
 someEnvGTZero : All SomeEnv (`GT` 0)
-someEnvGTZero = mapAll {p = NonZero} {q = (`GT` 0)} (\SIsNonZero => LTESucc LTEZero) someEnvNonZero
+someEnvGTZero = mapAll {p = NonZero} {q = (`GT` 0)} (\ItIsSucc => LTESucc LTEZero) someEnvNonZero
 
 SomeVars : SnocList (Exists $ \nm => Elem nm SomeCtx)
 SomeVars = [<
