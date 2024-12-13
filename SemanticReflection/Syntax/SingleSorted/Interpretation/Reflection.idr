@@ -46,7 +46,7 @@ openSyn synNm = do
     for_ syn.ops $ \op => do
         let opNm = UN $ Basic op.name
         declare [
-            IClaim fc MW Public [Totality Total] (MkTy fc fc opNm `({0 a : Type} -> Interp ~(IVar fc synNm) a => ~(Fun op.arity `(a) `(a)))),
+            IClaim $ MkFCVal fc $ MkIClaimData MW Public [Totality Total] (MkTy fc (MkFCVal fc opNm) `({0 a : Type} -> Interp ~(IVar fc synNm) a => ~(Fun op.arity `(a) `(a)))),
             IDef fc opNm [PatClause fc (IVar fc opNm) `(impl {a} ~(!(quote op)))]
         ]
   where

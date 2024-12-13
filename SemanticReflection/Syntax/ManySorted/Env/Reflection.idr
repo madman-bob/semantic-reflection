@@ -13,7 +13,7 @@ namespace Context
       where
         context' : SnocList Decl -> Elab (Context s)
         context' = traverse $ \case
-            IClaim _ MW Private [] (MkTy _ _ (UN (Basic nm)) a) => [| pure nm :! check a |]
+            IClaim (MkFCVal _ $ MkIClaimData MW Private [] (MkTy _ (MkFCVal _ $ UN (Basic nm)) a)) => [| pure nm :! check a |]
             _ => fail """
                 Expected variable declaration
                 eg.

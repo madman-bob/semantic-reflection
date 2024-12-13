@@ -58,7 +58,7 @@ collectVars t = do
     pure t
 
 axiom : Syntax s -> Decl -> Elab TTImp
-axiom syn (IClaim _ MW Private [] (MkTy nmFc _ (UN (Basic nm)) t)) = do
+axiom syn (IClaim $ MkFCVal _ $ MkIClaimData MW Private [] (MkTy nmFc (MkFCVal _ $UN (Basic nm)) t)) = do
     let fc = EmptyFC
 
     let ((MkSchemaContext _ metas vars), t) = runState (MkSchemaContext (map name syn.ops) [<] [<]) $ collectVars t
@@ -75,13 +75,13 @@ axiom syn (IClaim _ MW Private [] (MkTy nmFc _ (UN (Basic nm)) t)) = do
     rhs <- term syn rhs
 
     pure $ ILocal fc [
-            IClaim fc MW Private [] (MkTy fc fc metaVarsNm `(Context Type)),
+            IClaim $ MkFCVal fc $ MkIClaimData MW Private [] (MkTy fc (MkFCVal fc metaVarsNm) `(Context Type)),
             IDef fc metaVarsNm [PatClause fc (IVar fc metaVarsNm) (metaVarCtx metas)],
 
-            IClaim fc MW Private [] (MkTy fc fc lhsSortNm `(ISort ~(IVar fc metaVarsNm) ?)),
+            IClaim $ MkFCVal fc $ MkIClaimData MW Private [] (MkTy fc (MkFCVal fc lhsSortNm) `(ISort ~(IVar fc metaVarsNm) ?)),
             IDef fc lhsSortNm [PatClause fc (IVar fc lhsSortNm) !(introMetas metas `(?))],
 
-            IClaim fc MW Private [] (MkTy fc fc rhsSortNm `(ISort ~(IVar fc metaVarsNm) ?)),
+            IClaim $ MkFCVal fc $ MkIClaimData MW Private [] (MkTy fc (MkFCVal fc rhsSortNm) `(ISort ~(IVar fc metaVarsNm) ?)),
             IDef fc rhsSortNm [PatClause fc (IVar fc rhsSortNm) !(introMetas metas `(?))]
         ] `(MkAxiom
             ~(IPrimVal nmFc (Str nm))

@@ -23,7 +23,7 @@ namespace RawOp
 
     export
     rawOp : Decl -> Elab (RawOp s)
-    rawOp (IClaim fc MW Private [] $ MkTy _ _ (UN $ Basic nm) ty) = do
+    rawOp (IClaim $ MkFCVal fc $ MkIClaimData MW Private [] $ MkTy _ (MkFCVal _ $UN $ Basic nm) ty) = do
         let vars = freeVars ty
         index <- index vars
         (args, ret) <- sig vars ty

@@ -25,7 +25,7 @@ openAx : (thyNm : Name) -> Axiom syn -> Elab ()
 openAx thyNm ax = do
     name <- map (UN . Basic) $ unerase ax.name
     declare [
-        IClaim fc MW Export [Totality Total] (MkTy fc fc name !prfTy),
+        IClaim $ MkFCVal fc $ MkIClaimData MW Export [Totality Total] (MkTy fc (MkFCVal fc name) !prfTy),
         IDef fc name [PatClause fc !(prfLhs name) !prfRhs]
     ]
   where

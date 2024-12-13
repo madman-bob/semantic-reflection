@@ -15,7 +15,7 @@ import public Syntax.SingleSorted.Theory.Proof
 
 namespace Axiom
     getFC : Decl -> FC
-    getFC (IClaim fc _ _ _ _) = fc
+    getFC (IClaim (MkFCVal fc _)) = fc
     getFC (IData fc _ _ _) = fc
     getFC (IDef fc _ _) = fc
     getFC (IParameters fc _ _) = fc
@@ -30,7 +30,7 @@ namespace Axiom
     axiom : {syn : Syntax} ->
             List Decl ->
             Elab (Axiom syn)
-    axiom [IClaim fc MW Private [] (MkTy _ _ (UN (Basic nm)) $ IAlternative _ FirstSuccess [s@(IApp _ (IApp _ (IVar _ `{(===)}) lhs) rhs), _])] = do
+    axiom [IClaim $ MkFCVal fc $ MkIClaimData MW Private [] (MkTy _ (MkFCVal _ $ UN (Basic nm)) $ IAlternative _ FirstSuccess [s@(IApp _ (IApp _ (IVar _ `{(===)}) lhs) rhs), _])] = do
         let ctx = usedVars (map name syn.ops) s
 
         lhs <- term lhs
