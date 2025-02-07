@@ -16,7 +16,7 @@ public export
 Context : Type -> Type
 Context s = SnocList (String, s)
 
-export infix 10 :!
+export infix 0 :!
 
 public export
 (:!) : String -> s -> (String, s)

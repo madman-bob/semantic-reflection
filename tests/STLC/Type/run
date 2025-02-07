@@ -1,0 +1,5 @@
+. ../../testutils.sh
+
+basicTest Type.idr << EOF
+    ctx
+EOF
