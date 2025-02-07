@@ -37,7 +37,7 @@ eg2 = `(y * (x * z) * y)
 eg3 : Term SizedInvMonoidSyn `[x : 1; y : 2] 2
 eg3 = `(x * ?someHole)
 
-failing #"Can't find an implementation for NVar [<("x", 1), ("y" :! 2)] "z" 3."#
+failing #"Can't find an implementation for NVar [<("x" :! 1), ("y" :! 2)] "z" 3."#
     badEg : Term SizedInvMonoidSyn `[x : 1; y : 2] 3
     badEg = `(z)
 
