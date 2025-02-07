@@ -9,15 +9,6 @@ import public Syntax.ManySorted.Syntax
 %default total
 
 export
-snocListLit : Foldable f =>
-              f TTImp ->
-              TTImp
-snocListLit xs = foldl
-    (\xs, x => IApp EmptyFC (IApp EmptyFC (IVar EmptyFC `{(:<)}) xs) x)
-    (IVar EmptyFC `{Lin})
-    xs
-
-export
 findOp : FC ->
          Syntax s ->
          String ->

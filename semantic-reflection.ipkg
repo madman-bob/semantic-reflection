@@ -57,6 +57,12 @@ modules =
     Syntax.SingleSorted.Theory,
     Syntax.SingleSorted.Theory.Base,
     Syntax.SingleSorted.Theory.Proof,
-    Syntax.SingleSorted.Theory.Reflection
+    Syntax.SingleSorted.Theory.Reflection,
+    Syntax.STLC.Term,
+    Syntax.STLC.Term.Base,
+    Syntax.STLC.Term.Reflection,
+    Syntax.STLC.Type,
+    Syntax.STLC.Type.Base,
+    Syntax.STLC.Type.Reflection
 
 sourcedir = "SemanticReflection"
