@@ -1,0 +1,4 @@
+. ../../testutils.sh
+
+basicTest Term.idr << EOF
+EOF
