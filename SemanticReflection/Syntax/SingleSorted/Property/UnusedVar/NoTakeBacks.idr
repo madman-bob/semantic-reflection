@@ -3,8 +3,8 @@ module Syntax.SingleSorted.Property.UnusedVar.NoTakeBacks
 import Data.Bool
 import Syntax.PreorderReasoning
 
-import public Syntax.SingleSorted.Interpretation.Env.All
-import Syntax.SingleSorted.Interpretation.Env.Any
+import public Syntax.SingleSorted.Env.All
+import Syntax.SingleSorted.Env.Any
 import public Syntax.SingleSorted.Property.UnusedVar
 import public Syntax.SingleSorted.Property.UnusedVar.Syntactic
 

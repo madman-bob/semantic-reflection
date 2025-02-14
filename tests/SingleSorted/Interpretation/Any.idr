@@ -1,6 +1,6 @@
 import Data.Nat
 
-import Syntax.SingleSorted.Interpretation.Env.Any
+import Syntax.SingleSorted.Env.Any
 
 %default total
 

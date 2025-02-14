@@ -1,7 +1,7 @@
 import Data.DPair
 import Data.Nat
 
-import Syntax.SingleSorted.Interpretation.Env.All
+import Syntax.SingleSorted.Env.All
 
 %default total
 

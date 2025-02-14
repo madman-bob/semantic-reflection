@@ -1,4 +1,4 @@
-module Syntax.SingleSorted.Interpretation.Env
+module Syntax.SingleSorted.Env.Base
 
 import public Data.SnocList.Elem
 import Data.Zippable

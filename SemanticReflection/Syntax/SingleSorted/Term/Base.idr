@@ -1,5 +1,6 @@
 module Syntax.SingleSorted.Term.Base
 
+import public Syntax.SingleSorted.Env
 import public Syntax.SingleSorted.Interpretation
 import public Syntax.SingleSorted.Syntax
 

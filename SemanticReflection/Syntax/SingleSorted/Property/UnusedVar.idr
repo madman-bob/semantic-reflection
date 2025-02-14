@@ -3,7 +3,7 @@ module Syntax.SingleSorted.Property.UnusedVar
 import Syntax.PreorderReasoning
 
 import public Syntax.SingleSorted
-import public Syntax.SingleSorted.Interpretation.Env.All
+import public Syntax.SingleSorted.Env.All
 
 %default total
 

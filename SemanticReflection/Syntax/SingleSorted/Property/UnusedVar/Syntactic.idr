@@ -1,5 +1,6 @@
 module Syntax.SingleSorted.Property.UnusedVar.Syntactic
 
+import public Syntax.SingleSorted.Env
 import public Syntax.SingleSorted.Interpretation
 import public Syntax.SingleSorted.Property.UnusedVar
 import public Syntax.SingleSorted.Term

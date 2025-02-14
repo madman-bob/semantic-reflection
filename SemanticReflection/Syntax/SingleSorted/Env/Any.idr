@@ -1,8 +1,8 @@
-module Syntax.SingleSorted.Interpretation.Env.Any
+module Syntax.SingleSorted.Env.Any
 
 import public Data.DPair
 
-import public Syntax.SingleSorted.Interpretation.Env
+import public Syntax.SingleSorted.Env.Base
 
 %default total
 

@@ -1,6 +1,5 @@
 module Syntax.SingleSorted.Interpretation.Base
 
-import public Syntax.SingleSorted.Interpretation.Env
 import public Syntax.SingleSorted.Interpretation.Fun
 import public Syntax.SingleSorted.Syntax
 

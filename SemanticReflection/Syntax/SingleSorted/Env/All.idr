@@ -1,6 +1,6 @@
-module Syntax.SingleSorted.Interpretation.Env.All
+module Syntax.SingleSorted.Env.All
 
-import public Syntax.SingleSorted.Interpretation.Env
+import public Syntax.SingleSorted.Env.Base
 
 %default total
 
