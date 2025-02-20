@@ -6,6 +6,15 @@ import public Syntax.SingleSorted.Syntax.Base
 
 %default total
 
+export
+snocListLit : Foldable f =>
+              f TTImp ->
+              TTImp
+snocListLit xs = foldl
+    (\xs, x => IApp EmptyFC (IApp EmptyFC (IVar EmptyFC `{(:<)}) xs) x)
+    (IVar EmptyFC `{Lin})
+    xs
+
 namespace Operation
     export
     opName : TTImp -> Elab String
@@ -14,30 +23,35 @@ namespace Operation
     opName s = failAt (getFC s) "Expected operator"
 
     export
-    operation : {syn : Syntax} -> TTImp -> Elab (Op syn)
-    operation s = do
+    operation : Syntax -> TTImp -> Elab TTImp
+    operation syn s = do
+        let fc = getFC s
+
         nm <- opName s
-        let Just op = findOp nm
-            | Nothing => failAt (getFC s) "Operator \{show nm} not in syntax \{show syn}"
-        pure op
+        let nm = IPrimVal fc $ Str nm
+        let search = mapTopmostFC (const fc) `(%search)
+
+        pure $ `(forgetName {nm = ~(nm)} ~(search))
 
     %macro
     export
     fromTTImp : {syn : Syntax} -> TTImp -> Elab (Op syn)
-    fromTTImp s = operation s
+    fromTTImp s = check !(operation syn s)
 
 export
-syntax : TTImp -> Elab Syntax
-syntax (ILam fc MW ExplicitArg _ _ $ ICase _ [] _ _ clauses) = do
-    ops <- traverse rawOp $ clauses
-    pure $ MkSyntax $ cast ops
-  where
-    rawOp : Clause -> Elab RawOp
-    rawOp (PatClause _ lhs rhs) = [| MkRawOp (opName lhs) (check rhs) |]
-    rawOp clause = failAt fc "Expected pattern clause"
-syntax s = failAt (getFC s) "Expected signature using \\case block\neg. `(\\case e => 0; (*) => 2; inv => 1)"
+rawOp : Decl -> Elab TTImp
+rawOp (IClaim (MkFCVal _ (MkIClaimData MW Private [] (MkTy _ (MkFCVal fc (UN (Basic nm))) arity)))) = do
+    let nm = IPrimVal fc $ Str nm
+    pure `(MkRawOp ~(nm) ~(arity))
+rawOp decl = fail "Expected operation declaration\neg. `[e = 0; (*) : 2; inv : 1]"
+
+export
+syntax : List Decl -> Elab TTImp
+syntax decls = do
+    rawOps <- traverse rawOp decls
+    pure `(MkSyntax ~(snocListLit rawOps))
 
 %macro
 export
-fromTTImp : TTImp -> Elab Syntax
-fromTTImp s = syntax s
+fromDecls : List Decl -> Elab Syntax
+fromDecls decls = check !(syntax decls)

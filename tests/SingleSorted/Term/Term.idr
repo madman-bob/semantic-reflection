@@ -5,7 +5,7 @@ import Syntax.SingleSorted.Term
 %language ElabReflection
 
 GroupSyn : Syntax
-GroupSyn = `(\case e => 0; (*) => 2; inv => 1)
+GroupSyn = `[e : 0; (*) : 2; inv : 1]
 
 eg : Term GroupSyn [<"x", "y"]
 eg = Operation `((*)) [<
@@ -35,7 +35,7 @@ eg2 = `(y * (x * z) * x)
 eg3 : Term GroupSyn [<"x", "y", "z"]
 eg3 = `(x * ?someHole)
 
-failing #"Variable "z" not in context [< "x", "y"]"#
+failing #"Can't find an implementation for Elem "z" [<"x", "y"]."#
     badEg : Term GroupSyn [<"x", "y"]
     badEg = `(z)
 
@@ -44,11 +44,11 @@ failing #"Variable "f" is not a function"#
     badEg = `(f x)
 
 Interp GroupSyn String where
-    impl = `(\case
-        e => "e"
-        (*) => \x, y => "(\{x} * \{y})"
-        inv => \x => "(inv \{x})"
-    )
+    impl = `[
+        e = "e"
+        (*) = \x, y => "(\{x} * \{y})"
+        inv = \x => "(inv \{x})"
+    ]
 
 {ctx : Context} -> Show (Term GroupSyn ctx) where
     show x = unsafeEvalEnv (names ctx) x
@@ -58,4 +58,4 @@ Interp GroupSyn String where
         names (c :< nm) = names c :< nm
 
 Interp GroupSyn Integer where
-    impl = `(\case e => 0; (*) => (-); inv => (+ 1))
+    impl = `[e = 0; (*) = (-); inv = (+ 1)]

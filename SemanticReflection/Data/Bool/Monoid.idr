@@ -11,10 +11,10 @@ import public Language.Monoid
 
 public export
 [And] Model MonoidThy Bool where
-    int = MkInterp `(\case
-        e => True
-        (*) => \x, y => x && y
-    )
+    int = `[
+        e = True
+        (*) = \x, y => x && y
+    ]
 
     satThy = [<
         Prf andAssociative,
@@ -24,10 +24,10 @@ public export
 
 public export
 [Or] Model MonoidThy Bool where
-    int = MkInterp `(\case
-        e => False
-        (*) => \x, y => x || y
-    )
+    int = `[
+        e = False
+        (*) = \x, y => x || y
+    ]
 
     satThy = [<
         Prf orAssociative,
@@ -37,10 +37,10 @@ public export
 
 public export
 [Xor] Model MonoidThy Bool where
-    int = MkInterp `(\case
-        e => False
-        (*) => xor
-    )
+    int = `[
+        e = False
+        (*) = xor
+    ]
 
     satThy = [<
         Prf xorAssociative,

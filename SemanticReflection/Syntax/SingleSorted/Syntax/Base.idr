@@ -3,6 +3,8 @@ module Syntax.SingleSorted.Syntax.Base
 import Data.SnocList
 import public Data.SnocList.Elem
 
+import public Syntax.SingleSorted.Env
+
 %default total
 
 ||| A standalone operation
@@ -10,6 +12,7 @@ import public Data.SnocList.Elem
 ||| An operation has a name, and an arity - the number of arguments it takes
 public export
 record RawOp where
+    [noHints]
     constructor MkRawOp
     name : String
     arity : Nat
@@ -30,6 +33,7 @@ Show RawOp where
 ||| So the signature of monoids is ({e, *}, {e -> 0, * -> 2})
 public export
 record Syntax where
+    [noHints]
     constructor MkSyntax
     rawOps : SnocList RawOp
 
@@ -44,6 +48,7 @@ Show Syntax where
 ||| The name and arity of the operation are determined by the syntax it is in
 public export
 record Op (syn : Syntax) where
+    [noHints]
     constructor MkOp
     idx : Elem rawOp syn.rawOps
 
@@ -52,6 +57,18 @@ record Op (syn : Syntax) where
 public export
 {syn : Syntax} -> Show (Op syn) where
     show (MkOp idx) = show $ get syn.rawOps idx
+
+||| A named operation in a syntax
+public export
+record NOp (nm : String) (syn : Syntax) where
+    constructor MkNOp
+    idx : Elem (MkRawOp nm arity) syn.rawOps
+
+%name NOp nop
+
+public export
+forgetName : NOp nm syn -> Op syn
+forgetName (MkNOp idx) = MkOp idx
 
 public export
 name : {syn : Syntax} ->

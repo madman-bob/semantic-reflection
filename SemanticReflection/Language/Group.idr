@@ -6,6 +6,8 @@ import public Syntax.SingleSorted
 
 %language ElabReflection
 
+%hide Prelude.(*)
+
 ||| Group syntax
 |||
 ||| A group has
@@ -14,7 +16,7 @@ import public Syntax.SingleSorted
 ||| - a unary inverse operation
 public export
 GroupSyn : Syntax
-GroupSyn = `(\case e => 0; (*) => 2; inv => 1)
+GroupSyn = `[e : 0; (*) : 2; inv : 1]
 
 ||| Group theory
 |||

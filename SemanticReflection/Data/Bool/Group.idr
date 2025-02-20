@@ -12,11 +12,11 @@ import public Language.Group
 
 public export
 [Xor] Model GroupThy Bool where
-    int = MkInterp `(\case
-        e => False
-        (*) => xor
-        inv => id
-    )
+    int = `[
+        e = False
+        (*) = xor
+        inv = id
+    ]
 
     satThy = [<
         Prf xorAssociative,

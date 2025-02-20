@@ -10,10 +10,10 @@ import public Language.Monoid
 
 public export
 [Additive] Model MonoidThy Nat where
-    int = MkInterp `(\case
-        e => 0
-        (*) => (+)
-    )
+    int = `[
+        e = 0
+        (*) = (+)
+    ]
 
     satThy = [<
         Prf plusAssociative,
@@ -23,10 +23,10 @@ public export
 
 public export
 [Multiplicative] Model MonoidThy Nat where
-    int = MkInterp `(\case
-        e => 1
-        (*) => Prelude.(*)
-    )
+    int = `[
+        e = 1
+        (*) = Prelude.(*)
+    ]
 
     satThy = [<
         Prf multAssociative,

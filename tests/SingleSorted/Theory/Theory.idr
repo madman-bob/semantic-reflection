@@ -7,13 +7,13 @@ import Syntax.SingleSorted.Theory
 %language ElabReflection
 
 MonoidSyn : Syntax
-MonoidSyn = `(\case e => 0; (*) => 2)
+MonoidSyn = `[e : 0; (*) : 2]
 
 [ConcatInterp] Interp MonoidSyn (List a) where
-    impl = `(\case
-        e => []
-        (*) => (++)
-    )
+    impl = `[
+        e = []
+        (*) = (++)
+    ]
 
 leftId : Axiom MonoidSyn
 leftId = MkAxiom "leftId" [<"x"] `(e * x) `(x)

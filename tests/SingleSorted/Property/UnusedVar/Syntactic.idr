@@ -5,7 +5,7 @@ import Syntax.SingleSorted.Property.UnusedVar.Syntactic
 %language ElabReflection
 
 GroupSyn : Syntax
-GroupSyn = `(\case e => 0; (*) => 2; inv => 1)
+GroupSyn = `[e : 0; (*) : 2; inv : 1]
 
 GroupThy : Theory GroupSyn
 GroupThy = `[
@@ -17,8 +17,8 @@ GroupThy = `[
   ]
 
 %runElab openSyn `{GroupSyn}
-%runElab openThy `{GroupThy}
 %hide Prelude.(*)
+%runElab openThy `{GroupThy}
 
 xInvxUsed : {0 i : Elem nm ctx} ->
             SynUsedVar {syn = GroupSyn} i (Var i * inv (Var i))

@@ -14,7 +14,7 @@ monoidMult = MkOp Here
 %language ElabReflection
 
 GroupSyn : Syntax
-GroupSyn = `(\case e => 0; (*) => 2; inv => 1)
+GroupSyn = `[e : 0; (*) : 2; inv : 1]
 
 groupMult : Op GroupSyn
 groupMult = `((*))

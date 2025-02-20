@@ -9,7 +9,7 @@ import Syntax.SingleSorted.Property.UnusedVar
 %language ElabReflection
 
 GroupSyn : Syntax
-GroupSyn = `(\case e => 0; (*) => 2; inv => 1)
+GroupSyn = `[e : 0; (*) : 2; inv : 1]
 
 GroupThy : Theory GroupSyn
 GroupThy = `[
@@ -21,8 +21,8 @@ GroupThy = `[
   ]
 
 %runElab openSyn `{GroupSyn}
-%runElab openThy `{GroupThy}
 %hide Prelude.(*)
+%runElab openThy `{GroupThy}
 
 unusedInE : {0 i : Elem v ctx} ->
             UnusedVar GroupThy i `(e)
@@ -56,11 +56,11 @@ unusedComplex = Property.replace {thy = GroupThy} (symmetric equiv) $
             ~~ evalEnv env `(y * z)                 ...(cong (flip (*) _) $ rightId _)
 
 Model GroupThy Bool where
-    int = MkInterp `(\case
-        e => False
-        (*) => xor
-        inv => id
-    )
+    int = `[
+        e = False
+        (*) = xor
+        inv = id
+    ]
 
     satThy = [<
         Prf xorAssociative,
@@ -105,7 +105,7 @@ usedComplex xUnused = absurd $ irrelevantEq $ Calc $
 
 namespace ConstantThy
     ConstantSyn : Syntax
-    ConstantSyn = `(\case e => 0)
+    ConstantSyn = `[e : 0]
 
     ConstantThy : Theory ConstantSyn
     ConstantThy = `[constant : x = e]

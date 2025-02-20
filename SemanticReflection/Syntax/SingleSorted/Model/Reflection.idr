@@ -21,9 +21,9 @@ import public Syntax.SingleSorted.Theory
 |||         (0 z : a) ->
 |||         x * (y * z) = (x * y) * z
 export
-openAx : (thyNm : Name) -> Axiom syn -> Elab ()
+openAx : {syn : Syntax} -> (thyNm : Name) -> Axiom syn -> Elab ()
 openAx thyNm ax = do
-    name <- map (UN . Basic) $ unerase ax.name
+    let name = UN $ Basic ax.name
     declare [
         IClaim $ MkFCVal fc $ MkIClaimData MW Export [Totality Total] (MkTy fc (MkFCVal fc name) !prfTy),
         IDef fc name [PatClause fc !(prfLhs name) !prfRhs]
@@ -32,53 +32,40 @@ openAx thyNm ax = do
     fc : FC
     fc = EmptyFC
 
-    unerase : (0 x : a) -> Elab a
-    unerase x = check !(quote x)
+    ttImpEnv : {ctx : Context} -> Env ctx TTImp
+    ttImpEnv {ctx = [<]} = [<]
+    ttImpEnv {ctx = ctx :< nm} = ttImpEnv {ctx} :< IVar fc (UN $ Basic nm)
 
-    ||| Requoting a previously checked %search might result in a partially computed value
-    |||
-    ||| Remaining holes in the value all get called ?sa, leading to name collisions.
-    ||| So we change them to _, to restart evaluation.
-    |||
-    ||| Hopefully the user doesn't have any holes called ?sa.
-    searchHack : TTImp -> TTImp
-    searchHack = mapTTImp $ \case
-        IHole fc "sa" => `(_)
-        s => s
+    Interp syn TTImp where
+        impl op = Fun.curry $ foldl (IApp fc) (IVar fc $ UN $ Basic op.name)
+
+    idrTerm : {ctx : Context} -> Term syn ctx -> TTImp
+    idrTerm t = unsafeEvalEnv ttImpEnv t
 
     prfTy : Elab TTImp
     prfTy = do
-        vars <- unerase ax.vars
+        let env = snocListLit $ map (\nm => IVar fc $ UN $ Basic nm) ax.vars
 
-        let env = foldl
-              (\rest, nm => `(~(rest) :< ~(IVar fc $ UN $ Basic nm)))
-              `([<])
-              vars
-
-        lhs <- map searchHack $ quote ax.lhs
-        rhs <- map searchHack $ quote ax.rhs
+        let lhs = idrTerm ax.lhs
+        let rhs = idrTerm ax.rhs
 
         let a = IVar fc $ UN $ Basic "a"
         let t = foldr
               (\nm, rest => IPi fc M0 ExplicitArg (Just nm) a rest)
-              `(evalEnv ~(env) ~(lhs) === evalEnv ~(env) ~(rhs))
-              (map (UN . Basic) vars)
+              `(~(lhs) === ~(rhs))
+              (map (UN . Basic) ax.vars)
 
         pure `({0 a : Type} -> Model ~(IVar fc thyNm) a => ~(t))
 
     prfLhs : Name -> Elab TTImp
     prfLhs name = do
-        vars <- unerase ax.vars
-
         pure $ foldl
             (\rest, nm => IApp fc rest $ IBindVar fc nm)
             (IVar fc name)
-            vars
+            ax.vars
 
     prfRhs : Elab TTImp
     prfRhs = do
-        vars <- unerase ax.vars
-
         thy <- check $ IVar fc thyNm
         Just hasAx <- search $ HasAxiom thy ax
             | Nothing => fail "Axiom not part of theory"
@@ -86,7 +73,7 @@ openAx thyNm ax = do
         let prf = foldl
               (\rest, nm => IApp fc rest $ IVar fc $ UN $ Basic nm)
               `(getPrf {a} ~(!(quote hasAx)))
-              vars
+              ax.vars
 
         pure `(irrelevantEq ~(prf))
 

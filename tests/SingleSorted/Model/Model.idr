@@ -8,7 +8,7 @@ import Syntax.SingleSorted.Model
 %language ElabReflection
 
 MonoidSyn : Syntax
-MonoidSyn = `(\case e => 0; (*) => 2)
+MonoidSyn = `[e : 0; (*) : 2]
 
 MonoidThy : Theory MonoidSyn
 MonoidThy = `[
@@ -22,10 +22,10 @@ MonoidThy = `[
 %hide Prelude.(*)
 
 Model MonoidThy (List a) where
-    int = MkInterp `(\case
-        e => []
-        (*) => (++)
-    )
+    int = `[
+        e = []
+        (*) = (++)
+    ]
 
     satThy = [<
         Prf appendAssociative,
@@ -34,10 +34,10 @@ Model MonoidThy (List a) where
     ]
 
 Model MonoidThy Nat where
-    int = MkInterp `(\case
-        e => 0
-        (*) => (+)
-    )
+    int = `[
+        e = 0
+        (*) = (+)
+    ]
 
     satThy = [<
         Prf plusAssociative,

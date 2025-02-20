@@ -30,7 +30,7 @@ import Syntax.SingleSorted
 %language ElabReflection
 
 MonoidSyn : Syntax
-MonoidSyn = `(\case e => 0; (*) => 2)
+MonoidSyn = `[e : 0; (*) : 2]
 ```
 
 Monoids are an example of single-sorted syntax, so we are using `Syntax.SingleSorted`. We import `Data.List` as we will later implement an example model on `List`s.
@@ -67,7 +67,7 @@ We can now define a model of this theory.
 
 ```idris
 Model MonoidThy (List a) where
-    int = MkInterp `(\case e => []; (*) => (++))
+    int = `[e = []; (*) = (++)]
 
     satThy = [<
         Prf appendAssociative,

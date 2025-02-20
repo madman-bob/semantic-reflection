@@ -27,16 +27,17 @@ namespace Axiom
     getFC (IBuiltin fc _ _) = fc
 
     export
-    axiom : {syn : Syntax} ->
-            List Decl ->
-            Elab (Axiom syn)
-    axiom [IClaim $ MkFCVal fc $ MkIClaimData MW Private [] (MkTy _ (MkFCVal _ $ UN (Basic nm)) $ IAlternative _ FirstSuccess [s@(IApp _ (IApp _ (IVar _ `{(===)}) lhs) rhs), _])] = do
-        let ctx = usedVars (map name syn.ops) s
+    axiom : Syntax ->
+            Decl ->
+            Elab TTImp
+    axiom syn (IClaim $ MkFCVal _ $ MkIClaimData MW Private [] (MkTy _ (MkFCVal fc $ UN (Basic nm)) $ IAlternative _ FirstSuccess [s@(IApp _ (IApp _ (IVar _ `{(===)}) lhs) rhs), _])) = do
+        let nm = IPrimVal fc $ Str nm
+        let ctx = snocListLit $ map (IPrimVal EmptyFC . Str) $ usedVars (map name syn.ops) s
 
-        lhs <- term lhs
-        rhs <- term rhs
+        lhs <- term syn lhs
+        rhs <- term syn rhs
 
-        pure $ MkAxiom nm ctx lhs rhs
+        pure `(MkAxiom ~(nm) ~(ctx) ~(lhs) ~(rhs))
       where
         addVarName : (ignore : Context) ->
                      TTImp ->
@@ -54,26 +55,22 @@ namespace Axiom
                    TTImp ->
                    Context
         usedVars ignore s = execState [<] $ mapMTTImp (addVarName ignore) s
-    axiom (decl :: _ :: _) = failAt (getFC decl) "Expected single axiom\nUse `Theory` for collections of axioms"
-    axiom decls = failAt (maybe EmptyFC getFC $ head' decls) "Expected axiom\neg. `[leftId : e * x = x]"
+    axiom syn decl = failAt (getFC decl) "Expected axiom\neg. `[leftId : e * x = x]"
 
     %macro
     export
     fromDecls : {syn : Syntax} ->
                 List Decl ->
                 Elab (Axiom syn)
-    fromDecls s = axiom s
+    fromDecls [decl] = check !(axiom syn decl)
+    fromDecls decls = failAt (maybe EmptyFC getFC $ head' decls) "Expected single axiom\nUse `Theory` for collections of axioms"
 
 namespace Theory
     export
-    theory : {syn : Syntax} -> List Decl -> Elab (Theory syn)
-    theory decls = theory' (cast decls)
-      where
-        theory' : SnocList Decl -> Elab (Theory syn)
-        theory' (decls :< decl) = [| theory' decls :< axiom [decl] |]
-        theory' [<] = [| [<] |]
+    theory : Syntax -> List Decl -> Elab TTImp
+    theory syn decls = map snocListLit $ traverse (axiom syn) decls
 
     %macro
     export
     fromDecls : {syn : Syntax} -> List Decl -> Elab (Theory syn)
-    fromDecls s = theory s
+    fromDecls decls = check !(theory syn decls)

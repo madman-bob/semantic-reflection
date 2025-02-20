@@ -8,24 +8,45 @@ import public Syntax.SingleSorted.Syntax
 %default total
 
 export
-opCase : {syn : Syntax} ->
-         {0 p : Op syn -> Type} ->
-         TTImp ->
-         Elab ((op : Op syn) -> p op)
-opCase (ILam fc MW ExplicitArg mn arg $ ICase fc' opts t ty clauses) = check $ ILam fc MW ExplicitArg mn arg $ ICase fc' opts t ty !(
-    for clauses $ \case
-        PatClause fc lhs rhs => pure $ PatClause fc !(quote !(operation {syn} lhs)) rhs
-        clause => failAt fc "Expected operator case block with pattern clauses")
-opCase h@(IHole _ _) = check h
-opCase s = failAt (getFC s) "Expected operator case block"
+opCase : Syntax ->
+         List Decl ->
+         Elab TTImp
+opCase syn decls = do
+    clauses <- traverse case_ decls
+    lcase <- genSym "lcase"
+    pure $ ILam EmptyFC MW ExplicitArg (Just lcase) (Implicit EmptyFC False)
+        (ICase EmptyFC [] (IVar EmptyFC lcase) (Implicit EmptyFC False) clauses)
+  where
+    lookupOp' : FC -> String -> SnocList RawOp -> TTImp -> Elab TTImp
+    lookupOp' fc nm [<] acc = failAt fc "Operator not in syntax"
+    lookupOp' fc nm (rawOps :< rawOp) acc = if rawOp.name == nm
+        then pure `(MkOp ~(acc))
+        else lookupOp' fc nm rawOps `(There ~(acc))
+
+    lookupOp : FC -> String -> Elab TTImp
+    lookupOp fc nm = lookupOp' fc nm syn.rawOps `(Here)
+
+    case_ : Decl -> Elab Clause
+    case_ (IDef _ _ [PatClause _ (IVar fc (UN (Basic nm))) rhs]) = do
+        op <- lookupOp fc nm
+        pure $ PatClause fc op rhs
+    case_ decl = fail "Expected operator definition"
+
+namespace OpCase
+    %macro
+    export
+    fromDecls : {syn : Syntax} ->
+                {0 p : Op syn -> Type} ->
+                List Decl ->
+                Elab ((op : Op syn) -> p op)
+    fromDecls decls = check !(opCase syn decls)
 
 %macro
 export
-fromTTImp : {syn : Syntax} ->
-            {0 p : Op syn -> Type} ->
-            TTImp ->
-            Elab ((op : Op syn) -> p op)
-fromTTImp s = opCase s
+fromDecls : {syn : Syntax} ->
+            List Decl ->
+            Elab (Interp syn a)
+fromDecls decls = check `(MkInterp ~(!(opCase syn decls)))
 
 ||| Open a syntax in the current namespace
 |||

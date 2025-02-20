@@ -13,7 +13,7 @@ import public Syntax.SingleSorted
 ||| - an identity element
 public export
 MonoidSyn : Syntax
-MonoidSyn = `(\case e => 0; (*) => 2)
+MonoidSyn = `[e : 0; (*) : 2]
 
 ||| Monoid theory
 |||

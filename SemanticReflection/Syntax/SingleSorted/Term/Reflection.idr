@@ -1,49 +1,43 @@
 module Syntax.SingleSorted.Term.Reflection
 
-import public Decidable.Equality
-
-import public Syntax.SingleSorted.Interpretation
+import public Syntax.SingleSorted.Env
 import public Syntax.SingleSorted.Syntax
 import public Syntax.SingleSorted.Term.Base
 
 %default total
 
 export
-term : {syn : Syntax} ->
-       {ctx : Context} ->
+term : (syn : Syntax) ->
        TTImp ->
-       Elab (Term syn ctx)
-term = term' []
-  where
-    term' : (args : ConsEnv nms (Term syn ctx)) ->
-            TTImp ->
-            Elab (Term syn ctx)
-    term' args (IVar fc (UN (Basic nm))) = lookupOperation nm <|> lookupVar nm
-      where
-        lookupOperation : String -> Elab (Term syn ctx)
-        lookupOperation nm = case findOp {syn} nm of
-            Just op => case collect args of
-                Just args => pure $ Operation op args
-                Nothing => failAt fc "Operation has arity \{show op.arity}, given \{show $ length args} args"
-            Nothing => failAt fc "Operation \{show nm} not in signature"
+       Elab TTImp
+term syn h@(IHole _ _) = pure h
+term syn s = do
+    let (s, args) = collectArgs s []
 
-        lookupVar : String -> Elab (Term syn ctx)
-        lookupVar nm = case !(search $ Elem nm ctx) of
-            Just idx => case args of
-                [] => pure $ Var idx
-                _ :: _ => failAt fc "Variable \{show nm} is not a function"
-            Nothing => failAt fc "Variable \{show nm} not in context \{show ctx}"
-    term' args s@(IBindVar fc nm) = term' args $ assert_smaller s $ IVar fc (UN (Basic nm))
-    term' args (IApp fc f x) = do
-        x <- term' [] x
-        term' ((::) x args {nm = ""}) f
-    term' args h@(IHole _ _) = check h
-    term' args s = failAt (getFC s) "Language does not support this construct"
+    (fc, nm) : (FC, String) <- case s of
+        IVar fc (UN (Basic nm)) => pure (fc, nm)
+        IBindVar fc nm => pure (fc, nm)
+        _ => failAt (getFC s) "Language does not support this construct"
+
+    case find ((== nm) . name) syn.rawOps of
+        Nothing => case args of
+            [] => do
+                let nm = IPrimVal fc $ Str nm
+                let search = mapTopmostFC (const fc) `(%search)
+                pure `(Var {v = ~(nm)} ~(search))
+            _ :: _ => failAt fc "Variable \{show nm} is not a function"
+        Just rawOp => if length args == rawOp.arity
+            then do
+                op <- operation syn s
+                args <- assert_total $ traverse (term syn) args
+                pure `(Operation ~(op) ~(snocListLit args))
+            else failAt fc "Operation has arity \{show rawOp.arity}, given \{show $ length args} args"
+  where
+    collectArgs : TTImp -> List TTImp -> (TTImp, List TTImp)
+    collectArgs (IApp _ f x) acc = collectArgs f (x :: acc)
+    collectArgs s acc = (s, acc)
 
 %macro
 export
-fromTTImp : {syn : Syntax} ->
-            {ctx : Context} ->
-            TTImp ->
-            Elab (Term syn ctx)
-fromTTImp s = term s
+fromTTImp : {syn : Syntax} -> TTImp -> Elab (Term syn ctx)
+fromTTImp s = check !(term syn s)

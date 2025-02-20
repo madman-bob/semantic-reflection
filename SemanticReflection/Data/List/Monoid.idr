@@ -10,10 +10,10 @@ import public Language.Monoid
 
 public export
 Model MonoidThy (List a) where
-    int = MkInterp `(\case
-        e => []
-        (*) => (++)
-    )
+    int = `[
+        e = []
+        (*) = (++)
+    ]
 
     satThy = [<
         Prf appendAssociative,

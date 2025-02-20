@@ -27,7 +27,7 @@ stringFun x y z = x ++ y ++ z
 %language ElabReflection
 
 MonoidSyn : Syntax
-MonoidSyn = `(\case e => 0; (*) => 2)
+MonoidSyn = `[e : 0; (*) : 2]
 
 %runElab openSyn `{MonoidSyn}
 
@@ -36,12 +36,12 @@ Interp MonoidSyn Integer where
     impl (MkOp (There Here)) = 0
 
 Interp MonoidSyn String where
-    impl = `(\case e => ""; (*) => (++))
+    impl = `[e = ""; (*) = (++)]
 
-failing "Expected operator case block"
+failing "Expected operator definition"
     [Bad] Interp MonoidSyn Integer where
-        impl = `(0)
+        impl = `[e : 0]
 
-failing "Expected operator case block with pattern clauses"
+failing "Expected operator definition"
     [Bad] Interp MonoidSyn String where
-        impl = `(\case e => ""; (*) impossible)
+        impl = `[e = ""; (*) impossible]
