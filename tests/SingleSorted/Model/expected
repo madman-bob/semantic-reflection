@@ -12,5 +12,5 @@ rightId : (0 x : Nat) -> plus x 0 = x
 3
 
 Yes (EProd LitE (EProd LitE LitE))
-No (\isE => prim__void (uninhabited (trans Refl (isEZero isE))))
+No (\isE => void (uninhabited (trans Refl (isEZero isE))))
 

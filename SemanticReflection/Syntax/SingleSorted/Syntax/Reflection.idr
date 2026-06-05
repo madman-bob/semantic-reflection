@@ -19,7 +19,7 @@ namespace Operation
     export
     opName : TTImp -> Elab String
     opName (IVar fc (UN (Basic nm))) = pure nm
-    opName (IBindVar fc nm) = pure nm
+    opName (IBindVar fc (UN (Basic nm))) = pure nm
     opName s = failAt (getFC s) "Expected operator"
 
     export

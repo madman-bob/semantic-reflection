@@ -58,14 +58,14 @@ interpImpl syn decls = do
         ICase EmptyFC [] (IVar EmptyFC mn) (Implicit EmptyFC False) clauses
   where
     collectVars : TTImp -> State (List String) TTImp
-    collectVars (IApp _ f (IBindVar _ nm)) = do
+    collectVars (IApp _ f (IBindVar _ (UN (Basic nm)))) = do
         modify (nm ::)
         collectVars f
     collectVars t = pure t
 
     openEnv : SnocList String -> TTImp -> Elab TTImp
     openEnv ctx rhs = do
-        let vars = snocListLit $ map (IBindVar EmptyFC) ctx
+        let vars = snocListLit $ map (IBindVar EmptyFC . UN . Basic) ctx
 
         idxNm <- genSym "idx"
         pure $ ILam EmptyFC MW ExplicitArg (Just idxNm) (Implicit EmptyFC False)

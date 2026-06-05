@@ -60,7 +60,7 @@ openAx thyNm ax = do
     prfLhs : Name -> Elab TTImp
     prfLhs name = do
         pure $ foldl
-            (\rest, nm => IApp fc rest $ IBindVar fc nm)
+            (\rest, nm => IApp fc rest $ IBindVar fc (UN (Basic nm)))
             (IVar fc name)
             ax.vars
 

@@ -16,7 +16,7 @@ term syn s = do
 
     (fc, nm) : (FC, String) <- case s of
         IVar fc (UN (Basic nm)) => pure (fc, nm)
-        IBindVar fc nm => pure (fc, nm)
+        IBindVar fc (UN (Basic nm)) => pure (fc, nm)
         _ => failAt (getFC s) "Language does not support this construct"
 
     case find ((== nm) . name) syn.rawOps of

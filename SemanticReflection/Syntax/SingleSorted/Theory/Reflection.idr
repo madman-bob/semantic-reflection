@@ -42,7 +42,7 @@ namespace Axiom
         addVarName : (ignore : Context) ->
                      TTImp ->
                      State Context TTImp
-        addVarName ignore s@(IBindVar _ nm) = do
+        addVarName ignore s@(IBindVar _ (UN (Basic nm))) = do
             case isElem nm ignore of
                  Yes _ => pure ()
                  No _ => case isElem nm !get of

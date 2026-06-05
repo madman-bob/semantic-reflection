@@ -27,7 +27,7 @@ addNm ignore nm nms = if elem nm nms || elem nm ignore
 
 bindVars : SnocList String -> TTImp -> (SnocList String, TTImp)
 bindVars ignore t = runState [<] $ mapMTTImp (\case
-    IBindVar fc nm => do
+    IBindVar fc (UN (Basic nm)) => do
         modify $ addNm ignore nm
         pure $ IVar fc (UN (Basic nm))
     s => pure s) t
@@ -103,7 +103,7 @@ axiom syn (IClaim $ MkFCVal _ $ MkIClaimData MW Private [] (MkTy nmFc (MkFCVal _
         pure $ ILam fc MW ExplicitArg (Just envNm) (Implicit fc False)
             (ICase fc [] (IVar fc envNm) (Implicit fc False) [
                 PatClause fc
-                    (snocListLit $ map (IBindVar fc) metas)
+                    (snocListLit $ map (IBindVar fc . UN . Basic) metas)
                     body
             ])
 

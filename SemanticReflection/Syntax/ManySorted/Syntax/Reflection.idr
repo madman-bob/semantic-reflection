@@ -14,7 +14,7 @@ namespace RawOp
     freeVars t = execState [<] $ mapMTTImp addVarName t
       where
         addVarName : TTImp -> State (SnocList String) TTImp
-        addVarName t@(IBindVar _ nm) = do
+        addVarName t@(IBindVar _ (UN (Basic nm))) = do
             case isElem nm !get of
                 Yes _ => pure ()
                 No _ => modify (:< nm)
@@ -50,10 +50,10 @@ namespace RawOp
                       xs)
                   x
 
-            let lhs = foldl snoc lin $ map (IBindVar fc) vars
+            let lhs = foldl snoc lin $ map (\s => IBindVar fc (UN (Basic s))) vars
 
             let rhs = flip mapTTImp t $ \case
-                  IBindVar fc nm => IVar fc $ UN $ Basic nm
+                  IBindVar fc (UN (Basic nm)) => IVar fc $ UN $ Basic nm
                   t => t
 
             idxNm <- genSym "idx"
@@ -97,7 +97,7 @@ namespace Operation
     export
     opName : TTImp -> Elab String
     opName (IVar fc (UN (Basic nm))) = pure nm
-    opName (IBindVar fc nm) = pure nm
+    opName (IBindVar fc (UN (Basic nm))) = pure nm
     opName s = failAt (getFC s) "Expected operator"
 
     export
